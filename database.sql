@@ -51,13 +51,14 @@ create index parent_id
 
 create table if not exists shipments
 (
-    id          int                                                                    not null
+    id          int                                                                            not null
         primary key,
-    origin      int                                                                    not null,
-    destination int                                                                    not null,
-    price       decimal(10, 2)                                                         not null,
-    status      enum ('pending', 'cod_pending', 'paid', 'cancelled') default 'pending' not null,
-    customer_id int                                                                    not null,
+    origin      int                                                                            not null,
+    destination int                                                                            not null,
+    price       decimal(10, 2)                                                                 not null,
+    status      enum ('pending', 'cod_pending', 'paid', 'cancelled') default 'pending'         not null,
+    customer_id int                                                                            not null,
+    create_date timestamp                                            default CURRENT_TIMESTAMP null,
     constraint shipments_ibfk_1
         foreign key (origin) references logistics (id),
     constraint shipments_ibfk_2
@@ -84,7 +85,7 @@ create table if not exists vehicles
     coordinate point        null
 );
 
-create table if not exists trans_batches
+create table if not exists batches
 (
     id          int                                 not null
         primary key,
@@ -94,28 +95,46 @@ create table if not exists trans_batches
     responsible int                                 not null,
     status      enum ('in_trans', 'arrive')         not null,
     vehicle_id  int                                 null,
-    constraint trans_batches_ibfk_1
+    constraint batches_ibfk_1
         foreign key (origin) references logistics (id),
-    constraint trans_batches_ibfk_2
+    constraint batches_ibfk_2
         foreign key (destination) references logistics (id),
-    constraint trans_batches_ibfk_3
+    constraint batches_ibfk_3
         foreign key (responsible) references employees (id),
-    constraint trans_batches_ibfk_4
+    constraint batches_ibfk_4
         foreign key (vehicle_id) references vehicles (id)
 );
 
+create index destination
+    on batches (destination);
+
+create index origin
+    on batches (origin);
+
+create index responsible
+    on batches (responsible);
+
+create index vehicle_id
+    on batches (vehicle_id);
+
 create table if not exists packages
 (
-    id          int                                                                                                         not null
+    id               int                                                                                                 not null
         primary key,
-    create_date timestamp                                                                         default CURRENT_TIMESTAMP null,
-    shipment_id int                                                                                                         not null,
-    status      enum ('pending', 'processing', 'in_transit', 'delivering', 'signed', 'cancelled') default 'pending'         not null,
-    trans_id    int                                                                                                         null,
+    sign_date        timestamp                                                                                           null,
+    shipment_id      int                                                                                                 not null,
+    status           enum ('pending', 'processing', 'in_transit', 'delivering', 'signed', 'cancelled') default 'pending' not null,
+    trans_id         int                                                                                                 null,
+    receiver_id      int                                                                                                 null,
+    receiver_name    varchar(50)                                                                                         null,
+    receiver_address varchar(255)                                                                                        null,
+    receiver_phone   varchar(20)                                                                                         null,
+    constraint packages_customers_id_fk
+        foreign key (receiver_id) references customers (id),
     constraint packages_ibfk_1
         foreign key (shipment_id) references shipments (id),
     constraint packages_ibfk_2
-        foreign key (trans_id) references trans_batches (id)
+        foreign key (trans_id) references batches (id)
 );
 
 create index shipment_id
@@ -123,17 +142,5 @@ create index shipment_id
 
 create index trans_id
     on packages (trans_id);
-
-create index destination
-    on trans_batches (destination);
-
-create index origin
-    on trans_batches (origin);
-
-create index responsible
-    on trans_batches (responsible);
-
-create index vehicle_id
-    on trans_batches (vehicle_id);
 
 
