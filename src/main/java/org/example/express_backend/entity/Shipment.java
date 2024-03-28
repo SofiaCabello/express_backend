@@ -11,7 +11,7 @@ import java.sql.Timestamp;
  */
 @Data
 @ToString
-public class Shipments {
+public class Shipment {
     private Integer id;
     private Timestamp createTime;
     private Integer origin;

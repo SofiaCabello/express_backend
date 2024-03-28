@@ -8,7 +8,7 @@ import java.sql.Timestamp;
 
 @Data
 @ToString
-public class Batches {
+public class Batch {
     private Integer id;
     private Timestamp createDate;
     private Integer origin;

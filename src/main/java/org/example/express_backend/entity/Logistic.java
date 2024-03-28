@@ -6,7 +6,7 @@ import lombok.ToString;
 
 @Data
 @ToString
-public class Logistics {
+public class Logistic {
     private Integer id;
     private String name;
     private Integer parentId;

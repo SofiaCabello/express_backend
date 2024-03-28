@@ -6,7 +6,7 @@ import org.locationtech.jts.geom.Point;
 
 @Data
 @ToString
-public class Vehicles {
+public class Vehicle {
     private Integer id;
     private String type;
     private String shift;

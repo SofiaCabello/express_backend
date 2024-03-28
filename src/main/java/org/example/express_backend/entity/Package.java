@@ -8,7 +8,7 @@ import java.sql.Timestamp;
 
 @Data
 @ToString
-public class Packages {
+public class Package {
     private Integer id;
     private Integer receiverId;
     private Integer receiverName;

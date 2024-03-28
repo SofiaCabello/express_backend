@@ -5,11 +5,11 @@ import lombok.ToString;
 
 @Data
 @ToString
-public class Customers {
+public class Employee {
     private Integer id;
     private String name;
     private String phone;
-    private String address; // MySQL: JSON
     private String passwordHash;
     private String salt;
+    private Integer serveAt;
 }
