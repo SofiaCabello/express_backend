@@ -52,7 +52,7 @@ public class EmailUtil {
      * @param code 验证码
      * @return 是否正确
      */
-    public boolean verifyCode(String email, String code) {
+    public boolean isCorrect(String email, String code) {
         return codeMap.containsKey(email) && codeMap.get(email).equals(code);
     }
 
