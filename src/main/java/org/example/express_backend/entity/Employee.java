@@ -9,6 +9,7 @@ public class Employee {
     private Integer id;
     private String name;
     private String phone;
+    private String email;
     private String passwordHash;
     private String salt;
     private Integer serveAt;

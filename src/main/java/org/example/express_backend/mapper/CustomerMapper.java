@@ -13,13 +13,6 @@ import org.example.express_backend.entity.Customer;
 @Mapper
 public interface CustomerMapper extends BaseMapper<Customer> {
     /**
-     * 新建客户
-     * @param Customer 客户实体
-     */
-    @Insert("INSERT INTO customer(username, phone, password_hash, salt, address) VALUES(#{username}, #{phone}, #{passwordHash}, #{salt}, #{address})")
-    void createCustomer(Customer Customer);
-
-    /**
      * 根据用户名查找客户
      * @param username 用户名
      * @return Customer 客户实体
