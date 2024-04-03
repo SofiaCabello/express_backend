@@ -18,6 +18,8 @@ public class Package {
     private String status;
     private Integer shipmentId;
     private Integer batchId;
+    private Double weight;
+    private String size;
 
     @Getter
     private enum statusEnum {
