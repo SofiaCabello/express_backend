@@ -1,5 +1,6 @@
 package org.example.express_backend.entity;
 
+import com.alibaba.fastjson.JSONArray;
 import lombok.Data;
 import lombok.ToString;
 
@@ -10,7 +11,7 @@ public class Customer {
     private String name;
     private String phone;
     private String email;
-    private String address; // MySQL: JSON
+    private JSONArray address; // MySQL: JSON
     private String passwordHash;
     private String salt;
 }
