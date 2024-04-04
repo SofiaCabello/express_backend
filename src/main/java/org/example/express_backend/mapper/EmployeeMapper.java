@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.example.express_backend.entity.Employee;
+import org.example.express_backend.vo.EmployeeLoginVO;
 
 /**
  * 员工表 Mapper
@@ -34,4 +35,13 @@ public interface EmployeeMapper extends BaseMapper<Employee> {
      */
     @Select("SELECT * FROM employee WHERE name = #{name}")
     Employee getEmployeeByName(String name);
+
+
+    /**
+     * 根据邮箱查找员工
+     * @param email
+     * @return Employee 员工实体
+     */
+    @Select("select * from employee where email = #{email}")
+    Employee getEmployeeByEmail(String email);
 }

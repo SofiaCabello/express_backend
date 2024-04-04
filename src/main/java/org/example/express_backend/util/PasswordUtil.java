@@ -11,7 +11,7 @@ public class PasswordUtil {
      * @param password 密码
      * @return 加密后BCrypt密码
      */
-    public String encodePassword(String password) {
+    public static String encodePassword(String password) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         return encoder.encode(password);
     }
@@ -22,7 +22,7 @@ public class PasswordUtil {
      * @param encodedPassword 加密后的密码
      * @return 是否正确
      */
-    public boolean checkPassword(String rawPassword, String encodedPassword) {
+    public static boolean checkPassword(String rawPassword, String encodedPassword) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         return encoder.matches(rawPassword, encodedPassword);
     }

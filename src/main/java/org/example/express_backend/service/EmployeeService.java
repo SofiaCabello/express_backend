@@ -5,6 +5,7 @@ import org.example.express_backend.dto.EmployeeLoginDTO;
 import org.example.express_backend.entity.Employee;
 import org.example.express_backend.exception.PasswordErrorException;
 import org.example.express_backend.mapper.EmployeeMapper;
+import org.example.express_backend.util.PasswordUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
@@ -27,14 +28,14 @@ public class EmployeeService {
      * @param employeeLoginDTO
      * @return
      */
-    public Employee login(EmployeeLoginDTO employeeLoginDTO) {//前端返回数据,name和password
-        String username = employeeLoginDTO.getName();
+    public Employee login(EmployeeLoginDTO employeeLoginDTO) {//前端返回数据,email和password
+        String email = employeeLoginDTO.getEmail();
         String password = employeeLoginDTO.getPassword();
 
-        //1、根据用户名查询数据库中的数据
-        Employee employee = employeeMapper.getEmployeeByName(username);
+        //1、根据邮箱名查询数据库中的数据
+        Employee employee = employeeMapper.getEmployeeByEmail(email);
 
-        //2、处理各种异常情况（用户名不存在、密码不对）
+        //2、处理各种异常情况（邮箱名不存在、密码不对）
         if (employee == null) {
             //账号不存在
             throw new org.example.express_backend.exception.AccountNotFoundException(MessageConstant.ACCOUNT_NOT_FOUND);
@@ -42,8 +43,12 @@ public class EmployeeService {
 
         //密码比对
         // 对前端传来的明文密码进行md5加密处理，进而进行比对
-        password = DigestUtils.md5DigestAsHex(password.getBytes());
-        if (!password.equals(employee.getPasswordHash())) {
+        //password = DigestUtils.md5DigestAsHex(password.getBytes());
+
+
+        //此处使用Util工具类进行密文密码比对
+        password = PasswordUtil.encodePassword(password);
+        if (PasswordUtil.checkPassword(password, employee.getPasswordHash())) {
             //密码错误
             throw new PasswordErrorException(MessageConstant.PASSWORD_ERROR);
         }
