@@ -56,4 +56,11 @@ public class Result<T>{
         this.setTotal(total);
         return this;
     }
+
+    public static <T> Result<T> error(String msg) {
+        Result result = new Result();
+        result.message = msg;
+        result.code = 0;
+        return result;
+    }
 }

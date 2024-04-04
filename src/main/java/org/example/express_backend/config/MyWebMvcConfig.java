@@ -1,14 +1,25 @@
 package org.example.express_backend.config;
 
+import org.example.express_backend.interceptor.LoginCheckInterceptor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class MyWebMvcConfig implements WebMvcConfigurer {
+
+    //自定义拦截器对象
+    @Autowired
+    private LoginCheckInterceptor loginCheckInterceptor;
+
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new CORSInterceptor())
-                .addPathPatterns("/**");
+        //注册登录自定义拦截器对象
+        registry.addInterceptor(loginCheckInterceptor)
+                .addPathPatterns("/**")
+                .excludePathPatterns("/login");
+
     }
 }
