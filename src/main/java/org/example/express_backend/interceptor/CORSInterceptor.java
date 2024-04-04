@@ -1,4 +1,4 @@
-package org.example.express_backend.config;
+package org.example.express_backend.interceptor;
 
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
