@@ -1,13 +1,13 @@
 package org.example.express_backend.entity;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
+import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 
 @Data
 @ToString
+@Builder
 public class Package {
     private Integer id;
     private Integer receiverId;

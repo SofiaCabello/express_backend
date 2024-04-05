@@ -1,8 +1,6 @@
 package org.example.express_backend.entity;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 
 import java.sql.Timestamp;
 
@@ -11,6 +9,7 @@ import java.sql.Timestamp;
  */
 @Data
 @ToString
+@Builder
 public class Shipment {
     private Integer id;
     private Timestamp createTime;
@@ -19,9 +18,10 @@ public class Shipment {
     private Double price;
     private String status;
     private Integer customerId;
+    private Integer type;
 
     @Getter
-    private enum statusEnum {
+    public enum statusEnum {
         PENDING("pending"),
         COD_PENDING("cod_pending"),
         PAID("paid"),

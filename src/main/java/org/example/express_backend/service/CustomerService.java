@@ -21,7 +21,6 @@ public class CustomerService {
     private CustomerMapper customerMapper;
 
     private EmailUtil emailUtil = new EmailUtil();
-    private PasswordUtil passwordUtil = new PasswordUtil();
 
     /**
      * 发送邮箱验证码
@@ -66,7 +65,7 @@ public class CustomerService {
         // 注册
         Customer customer = new Customer();
         customer.setEmail(customerVerifyDTO.getEmail());
-        customer.setPasswordHash(passwordUtil.encodePassword(customerVerifyDTO.getPassword()));
+        customer.setPasswordHash(PasswordUtil.encodePassword(customerVerifyDTO.getPassword()));
         customerMapper.insert(customer);
         JwtUtil.generateToken(customer.getEmail());
         return JwtUtil.generateToken(customer.getEmail());
@@ -84,7 +83,7 @@ public class CustomerService {
         if (customer == null) {
             return null;
         }
-        if (passwordUtil.checkPassword(customerVerifyDTO.getPassword(), customer.getPasswordHash())) {
+        if (PasswordUtil.checkPassword(customerVerifyDTO.getPassword(), customer.getPasswordHash())) {
             return JwtUtil.generateToken(customer.getEmail());
         }
         return null;
