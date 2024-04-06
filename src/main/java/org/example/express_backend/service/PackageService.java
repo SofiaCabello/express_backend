@@ -2,8 +2,10 @@ package org.example.express_backend.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.exceptions.MybatisPlusException;
+import org.example.express_backend.dto.CalculatePriceDTO;
 import org.example.express_backend.dto.CreatePackageDTO;
 import org.example.express_backend.entity.Package;
+import org.example.express_backend.entity.Shipment;
 import org.example.express_backend.mapper.PackageMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -70,6 +72,9 @@ public class PackageService {
                 .size(DTO.getSize())
                 .status(Package.statusEnum.PENDING.getStatus())
                 .build();
+        Shipment S = shipmentService.getShipmentById(DTO.getShipmentId());
+        Double price = S.getPrice() + shipmentService.calculatePrice(new CalculatePriceDTO(S.getOrigin(), S.getDestination(), P.getWeight(), P.getSize(), S.getType()));
+        shipmentService.updatePrice(S.getId(), price);
         return packageMapper.insert(P) == 1 && addPackageToShipment(DTO.getShipmentId(), P.getId());
     }
 

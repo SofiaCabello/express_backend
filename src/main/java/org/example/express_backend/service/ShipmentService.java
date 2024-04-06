@@ -1,15 +1,13 @@
 package org.example.express_backend.service;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.exceptions.MybatisPlusException;
 import org.example.express_backend.dto.CalculatePriceDTO;
 import org.example.express_backend.dto.CreateShipmentDTO;
-import org.example.express_backend.entity.Package;
 import org.example.express_backend.entity.Shipment;
 import org.example.express_backend.mapper.ShipmentMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -97,16 +95,11 @@ public class ShipmentService {
      */
     public boolean createShipment(CreateShipmentDTO DTO){
         List<Integer> packageIds = DTO.getPackageIds();
-        Double price = 0.0;
-        for(Integer packageId: packageIds){
-            Package P = packageService.getPackageById(packageId);
-            price += calculatePrice(new CalculatePriceDTO(DTO.getOrigin(), DTO.getDestination(), P.getWeight(), P.getSize(), DTO.getType()));
-        }
         Shipment shipment = Shipment.builder()
                 .id(Integer.parseInt(generateShipmentId(DTO.getOrigin())))
                 .origin(DTO.getOrigin())
                 .destination(DTO.getDestination())
-                .price(price + ("cod_pending".equals(DTO.getPayMethod()) ? 5 : 0)) // 货到付款加5元手续费
+                .price(0.0)
                 .status("cod_pending".equals(DTO.getPayMethod()) ? Shipment.statusEnum.COD_PENDING.getStatus() : Shipment.statusEnum.PENDING.getStatus())
                 .customerId(DTO.getCustomerId())
                 .type(DTO.getType())
@@ -121,5 +114,23 @@ public class ShipmentService {
      */
     public Shipment getShipmentById(Integer id) {
         return shipmentMapper.selectById(id);
+    }
+
+    /**
+     * 更新价格
+     * @param shipmentId 运单号
+     * @param price 更新后的价格
+     */
+    public void updatePrice(Integer shipmentId, Double price) {
+        Shipment S = shipmentMapper.selectById(shipmentId);
+        if(S == null){
+            return;
+        }
+        try{
+            S.setPrice(price);
+            shipmentMapper.updateById(S);
+        } catch (MybatisPlusException e){
+            e.printStackTrace();
+        }
     }
 }
