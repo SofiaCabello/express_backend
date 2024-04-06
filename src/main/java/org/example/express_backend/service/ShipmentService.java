@@ -6,6 +6,7 @@ import org.example.express_backend.dto.CreateShipmentDTO;
 import org.example.express_backend.entity.Shipment;
 import org.example.express_backend.mapper.ShipmentMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,6 +18,7 @@ import java.util.List;
 public class ShipmentService {
     @Autowired
     private ShipmentMapper shipmentMapper;
+    @Lazy // 打破循环依赖
     @Autowired
     private PackageService packageService;
 
