@@ -11,9 +11,9 @@ import java.sql.Timestamp;
 public class Package {
     private Integer id;
     private Integer receiverId;
-    private Integer receiverName;
-    private Integer receiverPhone;
-    private Integer receiverAddress;
+    private String receiverName;
+    private String receiverPhone;
+    private String receiverAddress;
     private Timestamp signDate;
     private String status;
     private Integer shipmentId;
@@ -22,7 +22,7 @@ public class Package {
     private String size;
 
     @Getter
-    private enum statusEnum {
+    public enum statusEnum {
         PENDING("pending"),
         PROCESSING("processing"),
         IN_TRANSIT("in_transit"),

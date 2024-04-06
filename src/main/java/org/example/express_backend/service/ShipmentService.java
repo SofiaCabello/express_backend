@@ -113,4 +113,13 @@ public class ShipmentService {
                 .build();
         return shipmentMapper.insert(shipment) == 1;
     }
+
+    /**
+     * 根据运单号获取运单
+     * @param id 运单号
+     * @return 查询到的运单
+     */
+    public Shipment getShipmentById(Integer id) {
+        return shipmentMapper.selectById(id);
+    }
 }
