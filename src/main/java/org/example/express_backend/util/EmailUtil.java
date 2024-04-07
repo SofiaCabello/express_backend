@@ -10,34 +10,31 @@ import com.aliyun.tea.*;
 import com.aliyun.teaopenapi.Client;
 import com.aliyun.teaopenapi.models.Config;
 import darabonba.core.client.ClientOverrideConfiguration;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 用来发送邮件
  */
+@Component
 public class EmailUtil {
-    private Map<String, String> codeMap = new ConcurrentHashMap<>();
-    private Timer timer = new Timer();
+    @Autowired
+    private StringRedisTemplate redisTemplate;
 
-    /**
-     * 发送验证码，应当调用此方法来发送验证码，而不是直接调用sendVerifyEmail
-     * @param email 邮箱
-     * @return 是否发送成功
-     */
     public boolean sendCode(String email) {
         String code = String.valueOf((int) ((Math.random() * 9 + 1) * 100000)); // 生成6位随机验证码
-        codeMap.put(email, code);
-        timer.schedule(new java.util.TimerTask() {
-            @Override
-            public void run() {
-                codeMap.remove(email);
-            }
-        }, 1000 * 60 * 5); // 5分钟后删除验证码
+        ValueOperations<String, String> ops = redisTemplate.opsForValue();
+        ops.set(email, code, 5, TimeUnit.MINUTES); // 将验证码存储到Redis中，5分钟后过期
+
         try {
             return sendVerifyEmail(email, code);
         } catch (Exception e) {
@@ -46,14 +43,10 @@ public class EmailUtil {
         }
     }
 
-    /**
-     * 验证验证码是否正确，调用此方法来验证验证码
-     * @param email 邮箱
-     * @param code 验证码
-     * @return 是否正确
-     */
     public boolean isCorrect(String email, String code) {
-        return codeMap.containsKey(email) && codeMap.get(email).equals(code);
+        ValueOperations<String, String> ops = redisTemplate.opsForValue();
+        String storedCode = ops.get(email);
+        return code.equals(storedCode);
     }
 
 
