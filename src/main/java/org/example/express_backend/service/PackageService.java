@@ -114,7 +114,7 @@ public class PackageService {
      * @param packageDTO
      * @return
      */
-    public boolean delieverPackage(PackageDTO packageDTO) {
+    public boolean deliverPackage(PackageDTO packageDTO) {
         return updatePackageStatus(packageDTO, Package.statusEnum.PROCESSING.getStatus(), Package.statusEnum.DELIVERING.getStatus());
     }
 

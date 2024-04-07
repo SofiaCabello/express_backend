@@ -1,15 +1,17 @@
 package org.example.express_backend.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.example.express_backend.dto.CalculatePriceDTO;
 import org.example.express_backend.dto.CreateShipmentDTO;
 import org.example.express_backend.service.ShipmentService;
 import org.example.express_backend.util.Result;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/shipment")
+@Api(tags = "运单管理接口") // 添加了@Api注解，定义了该Controller的描述信息
 public class ShipmentController {
     @Autowired
     private ShipmentService shipmentService;
@@ -19,7 +21,9 @@ public class ShipmentController {
      * @param calculatePriceDTO 计算运费的信息
      * @return 运费
      */
-    public Result<Double> calculatePrice(CalculatePriceDTO calculatePriceDTO){
+    @ApiOperation("计算单个包裹的运费") // 添加了@ApiOperation注解，定义了该方法的描述信息
+    @PostMapping("/calculatePrice")
+    public Result<Double> calculatePrice(@RequestBody CalculatePriceDTO calculatePriceDTO){
         return Result.ok(shipmentService.calculatePrice(calculatePriceDTO)).message("计算成功");
     }
 
@@ -28,7 +32,9 @@ public class ShipmentController {
      * @param createShipmentDTO 运单信息
      * @return 是否创建成功
      */
-    public Result createShipment(CreateShipmentDTO createShipmentDTO){
+    @ApiOperation("创建运单") // 添加了@ApiOperation注解，定义了该方法的描述信息
+    @PostMapping("/createShipment")
+    public Result createShipment(@RequestBody CreateShipmentDTO createShipmentDTO){
         if(shipmentService.createShipment(createShipmentDTO)){
             return Result.ok().message("创建成功");
         }
