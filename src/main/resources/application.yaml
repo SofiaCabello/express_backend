@@ -1,0 +1,35 @@
+spring:
+  application:
+    name: express_backend
+  devtools:
+    restart:
+      enabled: true
+      additional-paths: src/main/java
+      exclude: static/**
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://localhost:3306/Express
+    username: root
+    password: root
+# mybatis-plus:
+#   configuration:
+#     log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl
+
+server:
+  port: 8081
+
+
+knife4j:
+  enable: true
+  openapi:
+    title: 用户管理接口文档
+    description: "用户管理接口文档"
+    concat: Zhiend
+    version: v1.0.0
+    group:
+      default:
+        group-name: default
+        api-rule: package
+        api-rule-resources:
+          - org.example.express_backend

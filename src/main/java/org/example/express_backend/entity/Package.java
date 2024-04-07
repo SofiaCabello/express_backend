@@ -8,6 +8,8 @@ import java.sql.Timestamp;
 @Data
 @ToString
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Package {
     private Integer id;
     private Integer receiverId;

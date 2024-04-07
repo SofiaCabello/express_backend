@@ -1,17 +1,18 @@
 package org.example.express_backend.service;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.exceptions.MybatisPlusException;
 import org.example.express_backend.dto.CalculatePriceDTO;
 import org.example.express_backend.dto.CreatePackageDTO;
+import org.example.express_backend.dto.PackageBatchDTO;
+import org.example.express_backend.dto.PackageDTO;
 import org.example.express_backend.entity.Package;
 import org.example.express_backend.entity.Shipment;
 import org.example.express_backend.mapper.PackageMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 public class PackageService {
@@ -87,5 +88,83 @@ public class PackageService {
         // 取6位时间戳
         String timestamp = String.valueOf(System.currentTimeMillis()).substring(7);
         return Integer.parseInt(shipmentId.toString() + timestamp);
+    }
+
+
+    /**
+     * 揽收包裹
+     * @param dto
+     * @return
+     */
+    public boolean pickUpPackage(PackageDTO dto) {
+        return updatePackageStatus(dto, Package.statusEnum.PENDING.getStatus(), Package.statusEnum.PROCESSING.getStatus());
+    }
+
+    /**
+     * 运输包裹
+     * @param packageDTO
+     * @return
+     */
+    public boolean transPackage(PackageDTO packageDTO) {
+        return updatePackageStatus(packageDTO, Package.statusEnum.PROCESSING.getStatus(), Package.statusEnum.IN_TRANSIT.getStatus());
+    }
+
+    /**
+     * 派送包裹
+     * @param packageDTO
+     * @return
+     */
+    public boolean delieverPackage(PackageDTO packageDTO) {
+        return updatePackageStatus(packageDTO, Package.statusEnum.PROCESSING.getStatus(), Package.statusEnum.DELIVERING.getStatus());
+    }
+
+    /**
+     * 签收包裹
+     * @param packageDTO
+     * @return
+     */
+    public boolean signedPackage(PackageDTO packageDTO) {
+        return updatePackageStatus(packageDTO, Package.statusEnum.PROCESSING.getStatus(), Package.statusEnum.SIGNED.getStatus());
+    }
+
+/*    *//**
+     * 取消包裹
+     * @param packageDTO
+     * @return
+     *//*
+    public boolean canceledPackage(PackageDTO packageDTO) {
+        return updatePackageStatus(packageDTO, Package.statusEnum.PROCESSING.getStatus(), Package.statusEnum.IN_TRANSIT.getStatus());
+    }*/
+
+    /**
+     * 更新包裹状态私有方法
+     * @param dto
+     * @param currentStatus
+     * @param newStatus
+     * @return
+     */
+    private boolean updatePackageStatus(PackageDTO dto, String currentStatus, String newStatus) {
+        if(!dto.getStatus().equals(currentStatus)){
+            return false;
+        }
+        Package aPackage = new Package();
+        BeanUtil.copyProperties(dto, aPackage);
+        aPackage.setStatus(newStatus);
+        packageMapper.updateById(aPackage);
+        return true;
+    }
+
+    /**
+     * 添加包裹的转运批次ids
+     * @param packageBatchDTO
+     * @return
+     */
+    public boolean addPackageToBatch(PackageBatchDTO packageBatchDTO){
+        for (Integer id :
+                packageBatchDTO.getPackageIds()) {
+            Package aPackage = packageMapper.selectById(id);
+            aPackage.setBatchId(packageBatchDTO.getBatchId());
+        }
+        return true;
     }
 }
