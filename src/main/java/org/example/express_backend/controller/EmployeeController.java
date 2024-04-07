@@ -64,13 +64,13 @@ public class EmployeeController {
     }
 
 
-/*    *//**
-     * 新增员工
+    /**
+     * 新增员工,注册员工
      * @param employeeDTO
      * @return
-     *//*
-    @PostMapping
-    @ApiOperation("新增员工")
+     */
+    @PostMapping("/enroll")
+    @ApiOperation("新增注册员工")
     public Result save(@RequestBody EmployeeDTO employeeDTO){
         log.info("新增员工：{}",employeeDTO);
 //        Employee employee = new Employee();
@@ -79,7 +79,7 @@ public class EmployeeController {
         return Result.ok();
     }
 
-    *//**
+/*    *//**
      * 根据id查询员工信息
      * @param id
      * @return

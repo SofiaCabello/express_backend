@@ -100,6 +100,7 @@ public class PackageController {
      * @param packageBatchDTO
      * @return
      */
+    @PostMapping("/addPackageToBatch")
     public Result addPackageToBatch(@RequestBody PackageBatchDTO packageBatchDTO){
         if(packageService.addPackageToBatch(packageBatchDTO)){
             return Result.ok().message("添加成功");

@@ -49,7 +49,7 @@ public class VehicleController {
      * @return
      */
     @ApiOperation("更新载具坐标接口")
-    @PutMapping
+    @PutMapping("/updateCoordinate")
     public Result UpdateCoordinate(VehicleDto vehicleDto) {
         Vehicle vehicle = new Vehicle();
         BeanUtil.copyProperties(vehicleDto, vehicle);
