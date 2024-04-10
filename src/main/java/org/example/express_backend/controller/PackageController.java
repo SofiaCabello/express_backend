@@ -50,9 +50,10 @@ public class PackageController {
     @ApiOperation("创建包裹") // 添加了@ApiOperation注解，定义了该方法的描述信息
     @PostMapping("/createPackage")
     public Result createPackage(@RequestBody CreatePackageDTO DTO) {
-        if(packageService.createPackage(DTO)){
-            return Result.ok().message("创建包裹成功");
-        } else {
+        try{
+            return Result.ok(packageService.createPackage(DTO)).message("创建包裹成功");
+        }
+        catch (Exception e){
             return Result.error("创建包裹失败");
         }
     }
@@ -64,7 +65,7 @@ public class PackageController {
      */
     @ApiOperation("揽收包裹") // 添加了@ApiOperation注解，定义了该方法的描述信息
     @PostMapping("/pickupPackage")
-    public Result pickUpPackage(@RequestBody Integer id){
+    public Result pickUpPackage(@RequestBody Long id){
         if(packageService.pickUpPackage(id)){
             return Result.ok().message("揽收包裹成功");
         } else {
@@ -94,7 +95,7 @@ public class PackageController {
      */
     @ApiOperation("派送包裹") // 添加了@ApiOperation注解，定义了该方法的描述信息
     @PostMapping("/deliverPackage")
-    public Result deliverPackage(@RequestBody Integer id){
+    public Result deliverPackage(@RequestBody Long id){
         if(packageService.deliverPackage(id)){
             return Result.ok().message("派送包裹成功");
         } else {
@@ -109,7 +110,7 @@ public class PackageController {
      */
     @ApiOperation("签收包裹") // 添加了@ApiOperation注解，定义了该方法的描述信息
     @PostMapping("/signedPackage")
-    public Result signedPackage(@RequestBody Integer id){
+    public Result signedPackage(@RequestBody Long id){
         if(packageService.signedPackage(id)){
             return Result.ok().message("签收包裹成功");
         } else {

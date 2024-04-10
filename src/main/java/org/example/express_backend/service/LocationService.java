@@ -61,9 +61,9 @@ public class LocationService {
      * @param vehicleDto 车辆信息
      */
     public void updatePackageLocation(VehicleDto vehicleDto){
-        List<Integer> packageIds = packageService.getPackageIdsByVehicleId(vehicleDto.getId());
+        List<Long> packageIds = packageService.getPackageIdsByVehicleId(vehicleDto.getId());
         List<Location> locations = new ArrayList<>();
-        for(Integer id : packageIds){
+        for(Long id : packageIds){
             Location location = Location.builder()
                     .id(id)
                     .coordinate(vehicleDto.getCoordinate())

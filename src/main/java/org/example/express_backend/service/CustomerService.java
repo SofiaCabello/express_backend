@@ -1,10 +1,7 @@
 package org.example.express_backend.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import org.example.express_backend.dto.AddAddressDTO;
-import org.example.express_backend.dto.CustomerEmailDTO;
-import org.example.express_backend.dto.CustomerLoginDTO;
-import org.example.express_backend.dto.CustomerRegisterDTO;
+import org.example.express_backend.dto.*;
 import org.example.express_backend.entity.Customer;
 import org.example.express_backend.mapper.CustomerMapper;
 import org.example.express_backend.util.EmailUtil;
@@ -21,7 +18,16 @@ public class CustomerService {
     @Autowired
     private CustomerMapper customerMapper;
 
-    private final EmailUtil emailUtil = new EmailUtil();
+    private final EmailUtil emailUtil;
+
+    @Autowired
+    public CustomerService(EmailUtil emailUtil) {
+        this.emailUtil = emailUtil;
+    }
+
+    private Long generateUserId(){
+        return System.currentTimeMillis();
+    }
 
     /**
      * 发送邮箱验证码
@@ -58,7 +64,7 @@ public class CustomerService {
      * @param customerRegisterDTO 注册信息
      * @return JSON Web Token
      */
-    public String register(CustomerRegisterDTO customerRegisterDTO) {
+    public VerifyDTO register(CustomerRegisterDTO customerRegisterDTO) {
         // 检查邮箱是否已经注册
         if(isRegistered(customerRegisterDTO.getEmail())){
             return null;
@@ -69,11 +75,15 @@ public class CustomerService {
         }
         // 注册
         Customer customer = new Customer();
+        customer.setId(generateUserId());
         customer.setEmail(customerRegisterDTO.getEmail());
         customer.setPasswordHash(PasswordUtil.encodePassword(customerRegisterDTO.getPassword()));
         customerMapper.insert(customer);
         JwtUtil.generateToken(customer.getEmail());
-        return JwtUtil.generateToken(customer.getEmail());
+        return VerifyDTO.builder()
+                .userId(customer.getId())
+                .token(JwtUtil.generateToken(customer.getEmail()))
+                .build();
     }
 
     /**
@@ -81,7 +91,7 @@ public class CustomerService {
      * @param customerLoginDTO 登录信息
      * @return JSON Web Token
      */
-    public String login(CustomerLoginDTO customerLoginDTO) {
+    public VerifyDTO login(CustomerLoginDTO customerLoginDTO) {
         QueryWrapper<Customer> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("email", customerLoginDTO.getEmail());
         Customer customer = customerMapper.selectOne(queryWrapper);
@@ -89,7 +99,10 @@ public class CustomerService {
             return null;
         }
         if (PasswordUtil.checkPassword(customerLoginDTO.getPassword(), customer.getPasswordHash())) {
-            return JwtUtil.generateToken(customer.getEmail());
+            return VerifyDTO.builder()
+                    .userId(customer.getId())
+                    .token(JwtUtil.generateToken(customer.getEmail()))
+                    .build();
         }
         return null;
     }

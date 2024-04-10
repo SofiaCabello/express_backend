@@ -28,11 +28,12 @@ public class CustomerController {
     @ApiOperation("用户登录") // 添加了@ApiOperation注解，定义了该方法的描述信息
     @PostMapping("/login")
     public Result login(@RequestBody CustomerLoginDTO customerLoginDTO){
-        String token = customerService.login(customerLoginDTO);
-        if(token != null){
-            return Result.ok(token).message("登录成功");
+        try{
+            return Result.ok(customerService.login(customerLoginDTO)).message("登录成功");
         }
-        return Result.error("登录失败");
+        catch (Exception e){
+            return Result.error("登录失败");
+        }
     }
 
     /**
@@ -43,11 +44,12 @@ public class CustomerController {
     @ApiOperation("用户注册") // 添加了@ApiOperation注解，定义了该方法的描述信息
     @PostMapping("/register")
     public Result register(@RequestBody CustomerRegisterDTO customerRegisterDTO) {
-        String token = customerService.register(customerRegisterDTO);
-        if(token != null){
-            return Result.ok(token).message("注册成功");
+        try{
+            return Result.ok(customerService.register(customerRegisterDTO)).message("注册成功");
         }
-        return Result.error("注册失败");
+        catch (Exception e){
+            return Result.error("注册失败");
+        }
     }
 
     /**

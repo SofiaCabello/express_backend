@@ -20,8 +20,11 @@ import java.util.concurrent.TimeUnit;
  */
 @Component
 public class EmailUtil {
-    @Autowired
-    private StringRedisTemplate redisTemplate;
+    private final StringRedisTemplate redisTemplate;
+
+    public EmailUtil(StringRedisTemplate redisTemplate) {
+        this.redisTemplate = redisTemplate;
+    }
 
     public boolean sendCode(String email) {
         String code = String.valueOf((int) ((Math.random() * 9 + 1) * 100000)); // 生成6位随机验证码
@@ -55,8 +58,6 @@ public class EmailUtil {
                 .accessKeyId(System.getenv("ALIBABA_CLOUD_ACCESS_KEY_ID"))
                 .accessKeySecret(System.getenv("ALIBABA_CLOUD_ACCESS_KEY_SECRET"))
                 .build());
-        System.out.println(System.getenv("ALIBABA_CLOUD_ACCESS_KEY_ID"));
-        System.out.println(System.getenv("ALIBABA_CLOUD_ACCESS_KEY_SECRET"));
         AsyncClient client = AsyncClient.builder()
                 .region("cn-hangzhou") // Region ID
                 .credentialsProvider(provider)
@@ -65,6 +66,7 @@ public class EmailUtil {
                                 .setEndpointOverride("dm.aliyuncs.com")
                 )
                 .build();
+        System.out.println("EMAIL: " + email + " CODE: " + code);
         SingleSendMailRequest singleSendMailRequest = SingleSendMailRequest.builder()
                 .accountName("noreply@chisa.love")
                 .addressType(1)

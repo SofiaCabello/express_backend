@@ -23,10 +23,11 @@ public class ShipmentController {
     @ApiOperation("创建运单") // 添加了@ApiOperation注解，定义了该方法的描述信息
     @PostMapping("/createShipment")
     public Result createShipment(@RequestBody CreateShipmentDTO createShipmentDTO){
-        if(shipmentService.createShipment(createShipmentDTO)){
-            return Result.ok().message("创建成功");
+        try{
+            return Result.ok(shipmentService.createShipment(createShipmentDTO)).message("创建成功");
+        }catch (Exception e){
+            return Result.error("创建失败");
         }
-        return Result.error("创建失败");
     }
 
     /**
@@ -35,7 +36,7 @@ public class ShipmentController {
      * @return 查询到的运单
      */
     @GetMapping("/getShipmentInfo")
-    public Result getShipmentWithPackagesById(@RequestParam(required = true) Integer id){
+    public Result getShipmentWithPackagesById(@RequestParam(required = true) Long id){
         return Result.ok(shipmentService.getShipmentWithPackages(id)).message("获取成功");
     }
 
@@ -45,7 +46,7 @@ public class ShipmentController {
      * @return 查询到的运单id
      */
     @GetMapping("/getShipmentIds")
-    public Result getShipmentIds(@RequestParam(required = true) Integer id){
+    public Result getShipmentIds(@RequestParam(required = true) Long id){
         return Result.ok(shipmentService.getShipmentIdsByCustomerId(id)).message("获取成功");
     }
 }

@@ -20,6 +20,7 @@ public class MyWebMvcConfig implements WebMvcConfigurer {
         //注册登录自定义拦截器对象
         registry.addInterceptor(loginCheckInterceptor)
                 .addPathPatterns("/**")
+                .excludePathPatterns("/**") // 放行所有路径
                 .excludePathPatterns("/login")
                 .excludePathPatterns(
                         "/swagger-ui.html",

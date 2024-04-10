@@ -14,13 +14,13 @@ import java.sql.Timestamp;
 @ToString
 @Builder
 public class Shipment {
-    private Integer id;
-    private Timestamp createTime;
-    private Integer origin;
-    private Integer destination;
+    private Long id;
+    private Timestamp createDate;
+    private Long origin;
+    private Long destination;
     private Double price;
     private String status;
-    private Integer customerId;
+    private Long customerId;
     private Integer type;
 
     @Getter

@@ -6,6 +6,6 @@ import lombok.Data;
 @Data
 @Builder
 public class PackageDTO {
-    private Integer id;
+    private Long id;
     private String status;
 }

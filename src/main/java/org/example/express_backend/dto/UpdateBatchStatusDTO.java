@@ -6,6 +6,6 @@ import java.io.Serializable;
 
 @Data
 public class UpdateBatchStatusDTO implements Serializable {
-    private Integer batchId; // 批次id
+    private Long batchId; // 批次id
     private String status;  // 状态
 }

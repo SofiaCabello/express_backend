@@ -29,7 +29,7 @@ public class ShipmentService {
      * @param origin 出发地网点号
      * @return 运单号
      */
-    private String generateShipmentId(Integer origin){
+    private String generateShipmentId(Long origin){
         String time = String.valueOf(System.currentTimeMillis());
         return time.substring(time.length() - 6) + origin.toString();
     }
@@ -40,7 +40,7 @@ public class ShipmentService {
      * @param destination 目的地
      * @return 是否同城/同省份
      */
-    public boolean isSameArea(Integer origin, Integer destination){
+    public boolean isSameArea(Long origin, Long destination){
         return origin.toString().substring(0, 2).equals(destination.toString().substring(0, 2));
     }
 
@@ -49,9 +49,9 @@ public class ShipmentService {
      * @param DTO 新建运单信息
      * @return 是否成功
      */
-    public boolean createShipment(CreateShipmentDTO DTO){
+    public Long createShipment(CreateShipmentDTO DTO){
         Shipment shipment = Shipment.builder()
-                .id(Integer.parseInt(generateShipmentId(DTO.getOrigin())))
+                .id(Long.parseLong(generateShipmentId(DTO.getOrigin())))
                 .origin(DTO.getOrigin())
                 .destination(DTO.getDestination())
                 .price(0.0)
@@ -59,9 +59,10 @@ public class ShipmentService {
                 .customerId(DTO.getCustomerId())
                 .type(DTO.getType())
                 // TimeStamp类型
-                .createTime(new java.sql.Timestamp(System.currentTimeMillis()))
+                .createDate(new java.sql.Timestamp(System.currentTimeMillis()))
                 .build();
-        return shipmentMapper.insert(shipment) == 1;
+        shipmentMapper.insert(shipment);
+        return shipment.getId();
     }
 
     /**
@@ -69,7 +70,7 @@ public class ShipmentService {
      * @param id 运单号
      * @return 查询到的运单
      */
-    public Shipment getShipmentById(Integer id) {
+    public Shipment getShipmentById(Long id) {
         return shipmentMapper.selectById(id);
     }
 
@@ -78,7 +79,7 @@ public class ShipmentService {
      * @param shipmentId 运单号
      * @param price 更新后的价格
      */
-    public void updatePrice(Integer shipmentId, Double price) {
+    public void updatePrice(Long shipmentId, Double price) {
         Shipment S = shipmentMapper.selectById(shipmentId);
         if(S == null){
             return;
@@ -96,7 +97,7 @@ public class ShipmentService {
      * @param id 运单号
      * @return 查询到的运单及包裹信息
      */
-    public ShipmentQueryResultDTO getShipmentWithPackages(Integer id){
+    public ShipmentQueryResultDTO getShipmentWithPackages(Long id){
         Shipment shipment = getShipmentById(id);
         if(shipment == null){
             return null;
@@ -110,7 +111,7 @@ public class ShipmentService {
      * @param customerId 用户id
      * @return  查询到的运单id
      */
-    public List<Integer> getShipmentIdsByCustomerId(Integer customerId){
+    public List<Long> getShipmentIdsByCustomerId(Long customerId){
         QueryWrapper<Shipment> wrapper = new QueryWrapper<>();
         wrapper.eq("customer_id", customerId);
         return shipmentMapper.selectList(wrapper).stream().map(Shipment::getId).toList();

@@ -11,13 +11,13 @@ import java.sql.Timestamp;
 @ToString
 @Builder
 public class Batch {
-    private Integer id;
+    private Long id;
     private Timestamp createDate;
-    private Integer origin;
-    private Integer destination;
-    private Integer responsible;
+    private Long origin;
+    private Long destination;
+    private Long responsible;
     private String status;
-    private Integer vehicleId;
+    private Long vehicleId;
 
     @Getter
     public enum statusEnum {

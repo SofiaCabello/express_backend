@@ -37,7 +37,7 @@ public class PackageService {
      * @param packageId 包裹id
      * @return 是否添加成功
      */
-    private boolean addPackageToShipment(Integer shipmentId, Integer packageId) {
+    private boolean addPackageToShipment(Long shipmentId, Long packageId) {
         QueryWrapper<Package> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("id", packageId);
         Package P = packageMapper.selectOne(queryWrapper);
@@ -61,7 +61,7 @@ public class PackageService {
      * @param shipmentId 运单id
      * @return 查询到的包裹
      */
-    public List<Package> getPackagesByShipmentId(Integer shipmentId) {
+    public List<Package> getPackagesByShipmentId(Long shipmentId) {
         QueryWrapper<Package> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("shipment_id", shipmentId);
         return packageMapper.selectList(queryWrapper);
@@ -81,8 +81,8 @@ public class PackageService {
         Double L = Double.parseDouble(size.split(",")[0]);
         Double W = Double.parseDouble(size.split(",")[1]);
         Double H = Double.parseDouble(size.split(",")[2]);
-        Integer origin = calculatePriceDTO.getOrigin();
-        Integer destination = calculatePriceDTO.getDestination();
+        Long origin = calculatePriceDTO.getOrigin();
+        Long destination = calculatePriceDTO.getDestination();
         double volume = L * W * H;
         double VWeight = 0;
 
@@ -121,7 +121,7 @@ public class PackageService {
      * @return 是否创建成功
      */
     @Transactional // 保证事务的一致性
-    public boolean createPackage(CreatePackageDTO DTO) {
+    public Long createPackage(CreatePackageDTO DTO) {
         Package P = Package.builder()
                 .id(generatePackageId(DTO.getShipmentId()))
                 .shipmentId(DTO.getShipmentId())
@@ -136,7 +136,9 @@ public class PackageService {
         Shipment S = shipmentService.getShipmentById(DTO.getShipmentId());
         Double price = S.getPrice() + calculatePrice(new CalculatePriceDTO(S.getOrigin(), S.getDestination(), P.getWeight(), P.getSize(), S.getType()));
         shipmentService.updatePrice(S.getId(), price);
-        return packageMapper.insert(P) == 1 && addPackageToShipment(DTO.getShipmentId(), P.getId());
+        packageMapper.insert(P);
+        addPackageToShipment(DTO.getShipmentId(), P.getId());
+        return P.getId();
     }
 
     /**
@@ -144,10 +146,10 @@ public class PackageService {
      * @param shipmentId 运单id
      * @return 包裹id
      */
-    private Integer generatePackageId(Integer shipmentId) {
-        // 取6位时间戳
-        String timestamp = String.valueOf(System.currentTimeMillis()).substring(7);
-        return Integer.parseInt(shipmentId.toString() + timestamp);
+    private Long generatePackageId(Long shipmentId) {
+        // 取2位时间戳
+        String timestamp = String.valueOf(System.currentTimeMillis()).substring(8);
+        return Long.parseLong(shipmentId.toString() + timestamp);
     }
 
 
@@ -156,7 +158,7 @@ public class PackageService {
      * @param packageId 包裹id
      * @return 是否揽收成功
      */
-    public boolean pickUpPackage(Integer packageId) {
+    public boolean pickUpPackage(Long packageId) {
         return updatePackageStatus(packageId, Package.statusEnum.PICKED_UP.getStatus());
     }
 
@@ -174,7 +176,7 @@ public class PackageService {
      * @param packageId 包裹id
      * @return 是否派送成功
      */
-    public boolean deliverPackage(Integer packageId) {
+    public boolean deliverPackage(Long packageId) {
         return updatePackageStatus(packageId, Package.statusEnum.DELIVERING.getStatus());
     }
 
@@ -183,7 +185,7 @@ public class PackageService {
      * @param id 包裹id
      * @return 是否签收成功
      */
-    public boolean signedPackage(Integer id) {
+    public boolean signedPackage(Long id) {
         return updatePackageStatus(id, Package.statusEnum.SIGNED.getStatus());
     }
 
@@ -202,7 +204,7 @@ public class PackageService {
      * @param status 包裹状态
      * @return  是否更新成功
      */
-    private boolean updatePackageStatus(Integer packageId, String status) {
+    private boolean updatePackageStatus(Long packageId, String status) {
         Package aPackage = packageMapper.selectById(packageId);
         aPackage.setStatus(status);
         return packageMapper.updateById(aPackage) == 1;
@@ -214,7 +216,7 @@ public class PackageService {
      * @return
      */
     public boolean addPackageToBatch(PackageBatchDTO packageBatchDTO){
-        for (Integer id :
+        for (Long id :
                 packageBatchDTO.getPackageIds()) {
             Package aPackage = packageMapper.selectById(id);
             aPackage.setBatchId(packageBatchDTO.getBatchId());
@@ -222,7 +224,7 @@ public class PackageService {
         return true;
     }
 
-    public List<Integer> getPackageIdsByVehicleId(Integer vehicleId) {
+    public List<Long> getPackageIdsByVehicleId(Long vehicleId) {
         QueryWrapper<Package> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("vehicle_id", vehicleId);
         List<Package> packages = packageMapper.selectList(queryWrapper);

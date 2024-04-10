@@ -19,7 +19,7 @@ public class BatchService {
      * @param destination 目的地
      * @return 生成的批次Id
      */
-    private String generateBatchId(int origin, int destination) {
+    private String generateBatchId(Long origin, Long destination) {
         String time = String.valueOf(System.currentTimeMillis()).substring(7);
         return String.format("%d%d%s", origin, destination, time);
     }
@@ -32,7 +32,7 @@ public class BatchService {
     public boolean createBatch(CreateBatchDTO DTO) {
         String batchId = generateBatchId(DTO.getOrigin(), DTO.getDestination());
         Batch batch = Batch.builder()
-                .id(Integer.parseInt(batchId))
+                .id(Long.parseLong(batchId))
                 .origin(DTO.getOrigin())
                 .destination(DTO.getDestination())
                 .responsible(DTO.getResponsible())

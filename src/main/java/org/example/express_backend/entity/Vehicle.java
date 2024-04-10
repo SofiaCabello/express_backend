@@ -29,7 +29,7 @@ public class Vehicle implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @TableId(value = "id", type = IdType.AUTO)
-    private Integer id;
+    private Long id;
 
     @TableField("type")
     private String type;
@@ -38,7 +38,7 @@ public class Vehicle implements Serializable {
     private String shift;
 
     @TableField("coordinate")
-    private Integer coordinate;
+    private Point coordinate;
 
 
 }

@@ -17,7 +17,7 @@ import java.io.Serializable;
 public class EmployeeLoginVO implements Serializable {
 
     @ApiModelProperty("主键值")
-    private Integer id;
+    private Long id;
 
     @ApiModelProperty("邮箱")
     private String eamil;

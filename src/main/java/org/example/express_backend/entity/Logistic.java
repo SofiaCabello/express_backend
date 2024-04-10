@@ -7,9 +7,9 @@ import lombok.ToString;
 @Data
 @ToString
 public class Logistic {
-    private Integer id;
+    private Long id;
     private String name;
-    private Integer parentId;
+    private Long parentId;
     private String level;
     private String districtCode;
     private String city;

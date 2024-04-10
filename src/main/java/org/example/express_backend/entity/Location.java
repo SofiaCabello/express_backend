@@ -13,7 +13,7 @@ import java.sql.Timestamp;
 @Builder
 @AllArgsConstructor
 public class Location {
-    private Integer id;
+    private Long id;
     private Point coordinate;
     private Timestamp time;
 }

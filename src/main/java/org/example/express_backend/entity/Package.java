@@ -10,15 +10,15 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Package {
-    private Integer id;
-    private Integer receiverId;
+    private Long id;
+    private Long receiverId;
     private String receiverName;
     private String receiverPhone;
     private String receiverAddress;
     private Timestamp signDate;
     private String status;
-    private Integer shipmentId;
-    private Integer batchId;
+    private Long shipmentId;
+    private Long batchId;
     private Double weight;
     private String size;
 

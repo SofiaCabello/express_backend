@@ -12,6 +12,6 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 public class PackageBatchDTO {
-    private List<Integer> PackageIds;
-    private Integer BatchId;
+    private List<Long> PackageIds; // 要添加的包裹id
+    private Long BatchId; // 要添加到的批次id
 }
