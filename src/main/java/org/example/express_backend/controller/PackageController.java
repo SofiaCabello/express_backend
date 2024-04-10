@@ -2,6 +2,7 @@ package org.example.express_backend.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.example.express_backend.dto.CalculatePriceDTO;
 import org.example.express_backend.dto.CreatePackageDTO;
 import org.example.express_backend.dto.PackageBatchDTO;
 import org.example.express_backend.dto.PackageDTO;
@@ -20,6 +21,17 @@ public class PackageController {
     private PackageService packageService;
     @Autowired
     private LocationService locationService;
+
+    /**
+     * 计算单个包裹的运费
+     * @param calculatePriceDTO 计算运费的信息
+     * @return 运费
+     */
+    @ApiOperation("计算单个包裹的运费") // 添加了@ApiOperation注解，定义了该方法的描述信息
+    @PostMapping("/calculatePrice")
+    public Result<Double> calculatePrice(@RequestBody CalculatePriceDTO calculatePriceDTO){
+        return Result.ok(packageService.calculatePrice(calculatePriceDTO)).message("计算成功");
+    }
 
     /**
      * 根据包裹id获取包裹

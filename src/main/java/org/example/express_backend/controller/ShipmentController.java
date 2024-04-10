@@ -17,17 +17,6 @@ public class ShipmentController {
     private ShipmentService shipmentService;
 
     /**
-     * 计算单个包裹的运费
-     * @param calculatePriceDTO 计算运费的信息
-     * @return 运费
-     */
-    @ApiOperation("计算单个包裹的运费") // 添加了@ApiOperation注解，定义了该方法的描述信息
-    @PostMapping("/calculatePrice")
-    public Result<Double> calculatePrice(@RequestBody CalculatePriceDTO calculatePriceDTO){
-        return Result.ok(shipmentService.calculatePrice(calculatePriceDTO)).message("计算成功");
-    }
-
-    /**
      * 创建运单
      * @param createShipmentDTO 运单信息
      * @return 是否创建成功
