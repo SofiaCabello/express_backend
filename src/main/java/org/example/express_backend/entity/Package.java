@@ -1,7 +1,6 @@
 package org.example.express_backend.entity;
 
 import lombok.*;
-import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 
@@ -26,6 +25,7 @@ public class Package {
     @Getter
     public enum statusEnum {
         PENDING("pending"),
+        PICKED_UP("picked_up"),
         PROCESSING("processing"),
         IN_TRANSIT("in_transit"),
         DELIVERING("delivering"),

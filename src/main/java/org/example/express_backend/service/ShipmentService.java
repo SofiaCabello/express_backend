@@ -2,7 +2,6 @@ package org.example.express_backend.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.exceptions.MybatisPlusException;
-import org.example.express_backend.dto.CalculatePriceDTO;
 import org.example.express_backend.dto.CreateShipmentDTO;
 import org.example.express_backend.dto.ShipmentQueryResultDTO;
 import org.example.express_backend.entity.Package;
@@ -59,6 +58,8 @@ public class ShipmentService {
                 .status("cod_pending".equals(DTO.getPayMethod()) ? Shipment.statusEnum.COD_PENDING.getStatus() : Shipment.statusEnum.PENDING.getStatus())
                 .customerId(DTO.getCustomerId())
                 .type(DTO.getType())
+                // TimeStamp类型
+                .createTime(new java.sql.Timestamp(System.currentTimeMillis()))
                 .build();
         return shipmentMapper.insert(shipment) == 1;
     }
@@ -102,5 +103,16 @@ public class ShipmentService {
         }
         List<Package> packages = packageService.getPackagesByShipmentId(id);
         return new ShipmentQueryResultDTO(shipment, packages);
+    }
+
+    /**
+     * 根据用户id获取运单id
+     * @param customerId 用户id
+     * @return  查询到的运单id
+     */
+    public List<Integer> getShipmentIdsByCustomerId(Integer customerId){
+        QueryWrapper<Shipment> wrapper = new QueryWrapper<>();
+        wrapper.eq("customer_id", customerId);
+        return shipmentMapper.selectList(wrapper).stream().map(Shipment::getId).toList();
     }
 }

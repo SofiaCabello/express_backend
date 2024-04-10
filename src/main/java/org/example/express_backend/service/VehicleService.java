@@ -1,9 +1,9 @@
 package org.example.express_backend.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.example.express_backend.entity.Vehicle;
 import org.example.express_backend.mapper.VehicleMapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
 /**

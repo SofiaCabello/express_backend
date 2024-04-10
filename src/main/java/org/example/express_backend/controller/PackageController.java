@@ -5,8 +5,6 @@ import io.swagger.annotations.ApiOperation;
 import org.example.express_backend.dto.CalculatePriceDTO;
 import org.example.express_backend.dto.CreatePackageDTO;
 import org.example.express_backend.dto.PackageBatchDTO;
-import org.example.express_backend.dto.PackageDTO;
-import org.example.express_backend.entity.Package;
 import org.example.express_backend.service.LocationService;
 import org.example.express_backend.service.PackageService;
 import org.example.express_backend.util.Result;
@@ -61,43 +59,43 @@ public class PackageController {
 
     /**
      * 揽收包裹
-     * @param packageDTO
-     * @return
+     * @param id 包裹id
+     * @return 是否揽收成功
      */
     @ApiOperation("揽收包裹") // 添加了@ApiOperation注解，定义了该方法的描述信息
     @PostMapping("/pickupPackage")
-    public Result pickUpPackage(@RequestBody PackageDTO packageDTO){
-        if(packageService.pickUpPackage(packageDTO)){
+    public Result pickUpPackage(@RequestBody Integer id){
+        if(packageService.pickUpPackage(id)){
             return Result.ok().message("揽收包裹成功");
         } else {
             return Result.error("揽收包裹失败");
         }
     }
 
-    /**
-     * 运输包裹
-     * @param packageDTO
-     * @return
-     */
-    @ApiOperation("运输包裹") // 添加了@ApiOperation注解，定义了该方法的描述信息
-    @PostMapping("/transPackage")
-    public Result transPackage(@RequestBody PackageDTO packageDTO){
-        if(packageService.transPackage(packageDTO)){
-            return Result.ok().message("运输包裹成功");
-        } else {
-            return Result.error("运输包裹失败");
-        }
-    }
+//    /**
+//     * 运输包裹
+//     * @param packageDTO
+//     * @return
+//     */
+//    @ApiOperation("运输包裹") // 添加了@ApiOperation注解，定义了该方法的描述信息
+//    @PostMapping("/transPackage")
+//    public Result transPackage(@RequestBody PackageDTO packageDTO){
+//        if(packageService.transPackage(packageDTO)){
+//            return Result.ok().message("运输包裹成功");
+//        } else {
+//            return Result.error("运输包裹失败");
+//        }
+//    }
 
     /**
      * 派送包裹
-     * @param packageDTO
-     * @return
+     * @param id 包裹id
+     * @return 是否派送成功
      */
     @ApiOperation("派送包裹") // 添加了@ApiOperation注解，定义了该方法的描述信息
     @PostMapping("/deliverPackage")
-    public Result deliverPackage(@RequestBody PackageDTO packageDTO){
-        if(packageService.deliverPackage(packageDTO)){
+    public Result deliverPackage(@RequestBody Integer id){
+        if(packageService.deliverPackage(id)){
             return Result.ok().message("派送包裹成功");
         } else {
             return Result.error("派送包裹失败");
@@ -106,13 +104,13 @@ public class PackageController {
 
     /**
      * 签收包裹
-     * @param packageDTO
-     * @return
+     * @param id 包裹id
+     * @return 是否签收成功
      */
     @ApiOperation("签收包裹") // 添加了@ApiOperation注解，定义了该方法的描述信息
     @PostMapping("/signedPackage")
-    public Result signedPackage(@RequestBody PackageDTO packageDTO){
-        if(packageService.signedPackage(packageDTO)){
+    public Result signedPackage(@RequestBody Integer id){
+        if(packageService.signedPackage(id)){
             return Result.ok().message("签收包裹成功");
         } else {
             return Result.error("签收包裹失败");
@@ -134,8 +132,13 @@ public class PackageController {
         }
     }
 
+    /**
+     * 根据包裹id获取包裹位置历史信息
+     * @param id 包裹id
+     * @return 查询到的包裹位置历史信息
+     */
     @GetMapping("/getPackageLocation")
-    public Result getPackageLocation(@RequestParam Integer id) {
+    public Result getPackageLocation(@RequestParam(required = true) Integer id) {
         return Result.ok(locationService.getPackageLocation(id)).message("获取包裹位置成功");
     }
 }

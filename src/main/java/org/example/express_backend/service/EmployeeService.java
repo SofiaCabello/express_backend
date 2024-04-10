@@ -12,9 +12,6 @@ import org.example.express_backend.util.PasswordUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.DigestUtils;
-
-import javax.security.auth.login.AccountNotFoundException;
 
 /**
  * 员工服务类，登录，揽收、运输、派送等业务过程

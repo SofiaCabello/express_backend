@@ -2,7 +2,6 @@ package org.example.express_backend.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.example.express_backend.dto.CalculatePriceDTO;
 import org.example.express_backend.dto.CreateShipmentDTO;
 import org.example.express_backend.service.ShipmentService;
 import org.example.express_backend.util.Result;
@@ -38,5 +37,15 @@ public class ShipmentController {
     @GetMapping("/getShipmentInfo")
     public Result getShipmentWithPackagesById(@RequestParam(required = true) Integer id){
         return Result.ok(shipmentService.getShipmentWithPackages(id)).message("获取成功");
+    }
+
+    /**
+     * 根据用户id获取运单id
+     * @param id 用户id
+     * @return 查询到的运单id
+     */
+    @GetMapping("/getShipmentIds")
+    public Result getShipmentIds(@RequestParam(required = true) Integer id){
+        return Result.ok(shipmentService.getShipmentIdsByCustomerId(id)).message("获取成功");
     }
 }

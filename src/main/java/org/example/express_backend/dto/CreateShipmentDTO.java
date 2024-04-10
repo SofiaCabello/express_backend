@@ -1,10 +1,8 @@
 package org.example.express_backend.dto;
 
 import lombok.Data;
-import org.example.express_backend.entity.Shipment;
 
 import java.io.Serializable;
-import java.util.List;
 
 @Data
 public class CreateShipmentDTO implements Serializable {

@@ -21,7 +21,7 @@ public class CustomerService {
     @Autowired
     private CustomerMapper customerMapper;
 
-    private EmailUtil emailUtil = new EmailUtil();
+    private final EmailUtil emailUtil = new EmailUtil();
 
     /**
      * 发送邮箱验证码

@@ -3,7 +3,6 @@ package org.example.express_backend.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.example.express_backend.dto.AddAddressDTO;
-import org.example.express_backend.dto.CustomerEmailDTO;
 import org.example.express_backend.dto.CustomerLoginDTO;
 import org.example.express_backend.dto.CustomerRegisterDTO;
 import org.example.express_backend.service.CustomerService;

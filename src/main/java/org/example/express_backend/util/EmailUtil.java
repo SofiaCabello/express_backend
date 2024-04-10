@@ -6,20 +6,13 @@ import com.aliyun.auth.credentials.provider.StaticCredentialProvider;
 import com.aliyun.sdk.service.dm20151123.AsyncClient;
 import com.aliyun.sdk.service.dm20151123.models.SingleSendMailRequest;
 import com.aliyun.sdk.service.dm20151123.models.SingleSendMailResponse;
-import com.aliyun.tea.*;
-import com.aliyun.teaopenapi.Client;
-import com.aliyun.teaopenapi.models.Config;
 import darabonba.core.client.ClientOverrideConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Timer;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 /**

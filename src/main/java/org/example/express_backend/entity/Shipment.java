@@ -1,6 +1,9 @@
 package org.example.express_backend.entity;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Data;
+import lombok.Getter;
+import lombok.ToString;
 
 import java.sql.Timestamp;
 

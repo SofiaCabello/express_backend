@@ -1,22 +1,20 @@
 package org.example.express_backend.controller;
 
-import cn.hutool.core.bean.BeanUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.example.express_backend.dto.EmployeeDTO;
 import org.example.express_backend.dto.EmployeeLoginDTO;
 import org.example.express_backend.entity.Employee;
-import org.example.express_backend.entity.Shipment;
 import org.example.express_backend.service.EmployeeService;
 import org.example.express_backend.util.JwtUtil;
 import org.example.express_backend.util.Result;
 import org.example.express_backend.vo.EmployeeLoginVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
-import java.util.Map;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/employee")

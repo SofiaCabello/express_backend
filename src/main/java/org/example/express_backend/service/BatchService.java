@@ -5,7 +5,6 @@ import org.example.express_backend.dto.CreateBatchDTO;
 import org.example.express_backend.dto.UpdateBatchStatusDTO;
 import org.example.express_backend.entity.Batch;
 import org.example.express_backend.mapper.BatchMapper;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,7 +1,5 @@
 package org.example.express_backend.controller;
 
-import org.example.express_backend.entity.Customer;
-import org.example.express_backend.mapper.BatchMapper;
 import org.example.express_backend.mapper.CustomerMapper;
 import org.example.express_backend.util.Result;
 import org.springframework.beans.factory.annotation.Autowired;
