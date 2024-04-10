@@ -7,8 +7,10 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.example.express_backend.dto.VehicleDto;
 import org.example.express_backend.entity.Vehicle;
+import org.example.express_backend.service.LocationService;
 import org.example.express_backend.service.VehicleService;
 import org.example.express_backend.util.Result;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -28,6 +30,9 @@ public class VehicleController {
 
 
     private final VehicleService vehicleService;
+
+    @Autowired
+    private LocationService locationService;
 
     /**
      * 新增载具接口
@@ -49,11 +54,12 @@ public class VehicleController {
      * @return
      */
     @ApiOperation("更新载具坐标接口")
-    @PutMapping("/updateCoordinate")
+    @PostMapping("/updateCoordinate")
     public Result UpdateCoordinate(VehicleDto vehicleDto) {
         Vehicle vehicle = new Vehicle();
         BeanUtil.copyProperties(vehicleDto, vehicle);
         vehicleService.updateById(vehicle);
+        locationService.updatePackageLocation(vehicleDto);
         return Result.ok();
     }
 

@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PackageService {
@@ -179,5 +180,12 @@ public class PackageService {
             aPackage.setBatchId(packageBatchDTO.getBatchId());
         }
         return true;
+    }
+
+    public List<Integer> getPackageIdsByVehicleId(Integer vehicleId) {
+        QueryWrapper<Package> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("vehicle_id", vehicleId);
+        List<Package> packages = packageMapper.selectList(queryWrapper);
+        return packages.stream().map(Package::getId).collect(Collectors.toList());
     }
 }
