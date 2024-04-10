@@ -99,7 +99,6 @@ public class ShipmentService {
      * @return 是否成功
      */
     public boolean createShipment(CreateShipmentDTO DTO){
-        List<Integer> packageIds = DTO.getPackageIds();
         Shipment shipment = Shipment.builder()
                 .id(Integer.parseInt(generateShipmentId(DTO.getOrigin())))
                 .origin(DTO.getOrigin())
