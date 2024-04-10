@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import org.example.express_backend.dto.AddAddressDTO;
 import org.example.express_backend.dto.CustomerLoginDTO;
 import org.example.express_backend.dto.CustomerRegisterDTO;
+import org.example.express_backend.dto.EmailDTO;
 import org.example.express_backend.service.CustomerService;
 import org.example.express_backend.util.Result;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,13 +55,13 @@ public class CustomerController {
 
     /**
      * 发送邮箱验证码
-     * @param email 邮箱
+     * @param emailDTO 邮箱
      * @return 是否发送成功
      */
     @ApiOperation("发送邮箱验证码") // 添加了@ApiOperation注解，定义了该方法的描述信息
     @PostMapping("/sendEmailVerifyCode")
-    public Result sendEmailVerifyCode(@RequestBody String email){
-        if(customerService.sendEmailVerifyCode(email)){
+    public Result sendEmailVerifyCode(@RequestBody EmailDTO emailDTO){
+        if(customerService.sendEmailVerifyCode(emailDTO.getEmail())){
             return Result.ok().message("发送成功");
         }
         return Result.error("发送失败");
