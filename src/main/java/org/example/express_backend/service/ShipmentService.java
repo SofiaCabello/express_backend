@@ -1,8 +1,11 @@
 package org.example.express_backend.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.exceptions.MybatisPlusException;
 import org.example.express_backend.dto.CalculatePriceDTO;
 import org.example.express_backend.dto.CreateShipmentDTO;
+import org.example.express_backend.dto.ShipmentQueryResultDTO;
+import org.example.express_backend.entity.Package;
 import org.example.express_backend.entity.Shipment;
 import org.example.express_backend.mapper.ShipmentMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -134,5 +137,19 @@ public class ShipmentService {
         } catch (MybatisPlusException e){
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 查询运单及运单附属所有包裹信息
+     * @param id 运单号
+     * @return 查询到的运单及包裹信息
+     */
+    public ShipmentQueryResultDTO getShipmentWithPackages(Integer id){
+        Shipment shipment = getShipmentById(id);
+        if(shipment == null){
+            return null;
+        }
+        List<Package> packages = packageService.getPackagesByShipmentId(id);
+        return new ShipmentQueryResultDTO(shipment, packages);
     }
 }

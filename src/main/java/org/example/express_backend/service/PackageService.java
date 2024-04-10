@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 public class PackageService {
     @Autowired
@@ -53,6 +55,17 @@ public class PackageService {
             return false;
         }
         return true;
+    }
+
+    /**
+     * 根据运单id获取包裹
+     * @param shipmentId 运单id
+     * @return 查询到的包裹
+     */
+    public List<Package> getPackagesByShipmentId(Integer shipmentId) {
+        QueryWrapper<Package> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("shipment_id", shipmentId);
+        return packageMapper.selectList(queryWrapper);
     }
 
     /**

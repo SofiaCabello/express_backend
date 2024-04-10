@@ -40,4 +40,14 @@ public class ShipmentController {
         }
         return Result.error("创建失败");
     }
+
+    /**
+     * 根据运单id获取运单及包裹
+     * @param id 运单id
+     * @return 查询到的运单
+     */
+    @GetMapping("/getShipmentWithPackagesById")
+    public Result getShipmentWithPackagesById(@RequestParam(required = true) Integer id){
+        return Result.ok(shipmentService.getShipmentWithPackages(id)).message("获取成功");
+    }
 }
