@@ -46,7 +46,7 @@ public class ShipmentController {
      * @param id 运单id
      * @return 查询到的运单
      */
-    @GetMapping("/getShipmentWithPackagesById")
+    @GetMapping("/getShipmentInfo")
     public Result getShipmentWithPackagesById(@RequestParam(required = true) Integer id){
         return Result.ok(shipmentService.getShipmentWithPackages(id)).message("获取成功");
     }

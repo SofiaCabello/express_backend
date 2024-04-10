@@ -6,6 +6,7 @@ import org.example.express_backend.dto.CreatePackageDTO;
 import org.example.express_backend.dto.PackageBatchDTO;
 import org.example.express_backend.dto.PackageDTO;
 import org.example.express_backend.entity.Package;
+import org.example.express_backend.service.LocationService;
 import org.example.express_backend.service.PackageService;
 import org.example.express_backend.util.Result;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 public class PackageController {
     @Autowired
     private PackageService packageService;
+    @Autowired
+    private LocationService locationService;
 
     /**
      * 根据包裹id获取包裹
@@ -117,5 +120,10 @@ public class PackageController {
         } else {
             return Result.error("添加失败");
         }
+    }
+
+    @GetMapping("/getPackageLocation")
+    public Result getPackageLocation(@RequestParam Integer id) {
+        return Result.ok(locationService.getPackageLocation(id)).message("获取包裹位置成功");
     }
 }
