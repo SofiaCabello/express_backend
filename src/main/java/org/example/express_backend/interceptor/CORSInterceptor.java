@@ -14,7 +14,7 @@ public class CORSInterceptor extends HandlerInterceptorAdapter {
         response.setHeader("Access-Control-Allow-Headers", "*");
         if (HttpMethod.OPTIONS.toString().equals(request.getMethod())) {
             response.setStatus(HttpStatus.NO_CONTENT.value());
-            return true; // 修改这里，让后续的拦截器和处理器可以被执行
+            return true;
         }
         return true;
     }

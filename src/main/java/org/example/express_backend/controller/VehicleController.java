@@ -11,10 +11,7 @@ import org.example.express_backend.service.LocationService;
 import org.example.express_backend.service.VehicleService;
 import org.example.express_backend.util.Result;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 /**
@@ -29,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/vehicle")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*")
 public class VehicleController {
 
 

@@ -7,14 +7,12 @@ import org.example.express_backend.dto.UpdateBatchStatusDTO;
 import org.example.express_backend.service.BatchService;
 import org.example.express_backend.util.Result;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/batch")
 @Api(tags = "批次接口服务")
+@CrossOrigin(origins = "*")
 public class BatchController {
     @Autowired
     private BatchService batchService;

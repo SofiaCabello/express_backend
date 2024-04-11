@@ -11,15 +11,13 @@ import org.example.express_backend.util.JwtUtil;
 import org.example.express_backend.util.Result;
 import org.example.express_backend.vo.EmployeeLoginVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/employee")
 @Slf4j
 @Api("员工端接口开发")
+@CrossOrigin(origins = "*")
 public class EmployeeController {
 
     @Autowired

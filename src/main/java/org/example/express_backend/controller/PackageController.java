@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/package")
 @Api(tags = "包裹管理接口") // 添加了@Api注解，定义了该Controller的描述信息
+@CrossOrigin(origins = "*")
 public class PackageController {
     @Autowired
     private PackageService packageService;

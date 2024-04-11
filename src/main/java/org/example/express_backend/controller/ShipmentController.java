@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/shipment")
 @Api(tags = "运单管理接口") // 添加了@Api注解，定义了该Controller的描述信息
+@CrossOrigin(origins = "*")
 public class ShipmentController {
     @Autowired
     private ShipmentService shipmentService;

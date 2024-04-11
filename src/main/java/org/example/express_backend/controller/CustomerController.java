@@ -9,14 +9,12 @@ import org.example.express_backend.dto.EmailDTO;
 import org.example.express_backend.service.CustomerService;
 import org.example.express_backend.util.Result;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/customer")
 @Api(tags = "用户管理接口") // 添加了@Api注解，定义了该Controller的描述信息
+@CrossOrigin(origins = "*")
 public class CustomerController {
     @Autowired
     private CustomerService customerService;
