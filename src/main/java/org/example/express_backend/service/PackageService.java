@@ -21,6 +21,8 @@ public class PackageService {
     private PackageMapper packageMapper;
     @Autowired
     private ShipmentService shipmentService;
+    @Autowired
+    private CustomerService customerService;
 
     /**
      * 根据包裹id获取包裹
@@ -125,7 +127,6 @@ public class PackageService {
         Package P = Package.builder()
                 .id(generatePackageId(DTO.getShipmentId()))
                 .shipmentId(DTO.getShipmentId())
-                .receiverId(DTO.getReceiverId())
                 .receiverName(DTO.getReceiverName())
                 .receiverAddress(DTO.getReceiverAddress())
                 .receiverPhone(DTO.getReceiverPhone())
@@ -133,6 +134,13 @@ public class PackageService {
                 .size(DTO.getSize())
                 .status(Package.statusEnum.PENDING.getStatus())
                 .build();
+        if(DTO.getReceiverEmail() != null){
+            if(customerService.isRegistered(DTO.getReceiverEmail())){
+                P.setId(customerService.getUserIdByEmail(DTO.getReceiverEmail()));
+            } else {
+                throw new MybatisPlusException("收件人未注册");
+            }
+        }
         Shipment S = shipmentService.getShipmentById(DTO.getShipmentId());
         Double price = S.getPrice() + calculatePrice(new CalculatePriceDTO(S.getOrigin(), S.getDestination(), P.getWeight(), P.getSize(), S.getType()));
         shipmentService.updatePrice(S.getId(), price);

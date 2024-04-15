@@ -55,6 +55,7 @@ public class PackageController {
             return Result.ok(packageService.createPackage(DTO)).message("创建包裹成功");
         }
         catch (Exception e){
+            e.printStackTrace();
             return Result.error("创建包裹失败");
         }
     }

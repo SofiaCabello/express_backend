@@ -142,4 +142,19 @@ public class CustomerService {
         customerMapper.updateById(customer);
         return true;
     }
+
+    /**
+     * 根据邮箱获取用户ID
+     * @param email 邮箱
+     * @return 用户ID
+     */
+    public Long getUserIdByEmail(String email) {
+        QueryWrapper<Customer> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("email", email);
+        Customer customer = customerMapper.selectOne(queryWrapper);
+        if (customer == null) {
+            return null;
+        }
+        return customer.getId();
+    }
 }
