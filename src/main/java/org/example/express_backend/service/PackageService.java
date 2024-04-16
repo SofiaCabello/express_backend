@@ -29,7 +29,7 @@ public class PackageService {
      * @param id 包裹id
      * @return 查询到的包裹
      */
-    public Package getPackageById(Integer id) {
+    public Package getPackageById(Long id) {
         return packageMapper.selectById(id);
     }
 
@@ -134,12 +134,8 @@ public class PackageService {
                 .size(DTO.getSize())
                 .status(Package.statusEnum.PENDING.getStatus())
                 .build();
-        if(DTO.getReceiverEmail() != null){
-            if(customerService.isRegistered(DTO.getReceiverEmail())){
-                P.setId(customerService.getUserIdByEmail(DTO.getReceiverEmail()));
-            } else {
-                throw new MybatisPlusException("收件人未注册");
-            }
+        if(DTO.getReceiverId() !=null){
+            P.setReceiverId(DTO.getReceiverId());
         }
         Shipment S = shipmentService.getShipmentById(DTO.getShipmentId());
         Double price = S.getPrice() + calculatePrice(new CalculatePriceDTO(S.getOrigin(), S.getDestination(), P.getWeight(), P.getSize(), S.getType()));
@@ -155,8 +151,8 @@ public class PackageService {
      * @return 包裹id
      */
     private Long generatePackageId(Long shipmentId) {
-        // 取2位时间戳
-        String timestamp = String.valueOf(System.currentTimeMillis()).substring(8);
+        // 取时间戳的后7位
+        String timestamp = String.valueOf(System.currentTimeMillis()).substring(7);
         return Long.parseLong(shipmentId.toString() + timestamp);
     }
 

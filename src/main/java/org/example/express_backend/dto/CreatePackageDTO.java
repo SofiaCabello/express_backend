@@ -7,7 +7,7 @@ import java.io.Serializable;
 @Data
 public class CreatePackageDTO implements Serializable {
     private Long shipmentId; // 运单id
-    private String receiverEmail;    // 收件人邮箱
+    private Long receiverId; // 收件人id
     private String receiverName;    // 收件人姓名
     private String receiverAddress; // 收件人地址
     private String receiverPhone;   // 收件人电话

@@ -92,4 +92,18 @@ public class CustomerController {
         }
         return Result.error("删除失败");
     }
+
+    /**
+     * 获取用户信息
+     * @param email 邮箱
+     * @return 用户信息
+     */
+    @GetMapping("/getCustomerByEmail")
+    public Result getCustomerByEmail(@RequestParam(required = true) String email){
+        try {
+            return Result.ok(customerService.getCustomerByEmail(email)).message("获取成功");
+        } catch (Exception e) {
+            return Result.error("获取失败");
+        }
+    }
 }

@@ -39,7 +39,7 @@ public class PackageController {
      */
     @ApiOperation("根据包裹id获取包裹") // 添加了@ApiOperation注解，定义了该方法的描述信息
     @GetMapping("/getPackageById")
-    public Result getPackageById(@RequestParam(required = true) Integer id) {
+    public Result getPackageById(@RequestParam(required = true) Long id) {
         return Result.ok(packageService.getPackageById(id)).message("获取包裹成功");
     }
 
@@ -141,7 +141,7 @@ public class PackageController {
      * @return 查询到的包裹位置历史信息
      */
     @GetMapping("/getPackageLocation")
-    public Result getPackageLocation(@RequestParam(required = true) Integer id) {
+    public Result getPackageLocation(@RequestParam(required = true) Long id) {
         return Result.ok(locationService.getPackageLocation(id)).message("获取包裹位置成功");
     }
 }

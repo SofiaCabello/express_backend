@@ -39,7 +39,7 @@ public class LocationService {
      * @param id 包裹id
      * @return 位置信息
      */
-    public List<LocationResultDTO> getPackageLocation(Integer id) {
+    public List<LocationResultDTO> getPackageLocation(Long id) {
         QueryWrapper<Location> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("id", id);
         List<Location> locations = locationMapper.selectList(queryWrapper);

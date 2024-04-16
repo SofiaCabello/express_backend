@@ -31,7 +31,7 @@ public class ShipmentService {
      */
     private String generateShipmentId(Long origin){
         String time = String.valueOf(System.currentTimeMillis());
-        return time.substring(time.length() - 6) + origin.toString();
+        return origin.toString() + time.substring(time.length() - 6);
     }
 
     /**

@@ -144,17 +144,13 @@ public class CustomerService {
     }
 
     /**
-     * 根据邮箱获取用户ID
+     * 获取用户信息
      * @param email 邮箱
-     * @return 用户ID
+     * @return 用户信息
      */
-    public Long getUserIdByEmail(String email) {
+    public Customer getCustomerByEmail(String email) {
         QueryWrapper<Customer> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("email", email);
-        Customer customer = customerMapper.selectOne(queryWrapper);
-        if (customer == null) {
-            return null;
-        }
-        return customer.getId();
+        return customerMapper.selectOne(queryWrapper);
     }
 }
