@@ -81,4 +81,18 @@ public class EmployeeService extends ServiceImpl<EmployeeMapper, Employee> imple
 
         employeeMapper.insert(employee);
     }
+
+    /**
+     * 修改员工
+     *
+     * @param employeeDTO
+     */
+    public void update(EmployeeDTO employeeDTO) {
+        this.update(employeeDTO);
+    }
+
+
+    public Employee getEmployeeByEmail(String email) {
+        return employeeMapper.getEmployeeByEmail(email);
+    }
 }

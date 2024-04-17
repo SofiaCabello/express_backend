@@ -13,6 +13,8 @@ import org.example.express_backend.vo.EmployeeLoginVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/employee")
 @Slf4j
@@ -75,17 +77,48 @@ public class EmployeeController {
         return Result.ok();
     }
 
-/*    *//**
+
+    /**
      * 根据id查询员工信息
      * @param id
      * @return
-     *//*
+     */
     @GetMapping("/{id}")
     @ApiOperation("根据id查询员工信息")
     public Result<Employee> getById(@PathVariable Long id){
         Employee employee = employeeService.getById(id);
         return Result.ok(employee);
-    }*/
+    }
+
+    @PostMapping("/update")
+    @ApiOperation("修改员工信息")
+    public Result update(@RequestBody EmployeeDTO employeeDTO){
+        log.info("修改员工信息：{}",employeeDTO);
+        employeeService.update(employeeDTO);
+        return Result.ok();
+    }
+
+
+    /**
+     * 查询所有员工信息
+     * @return
+     */
+    @GetMapping("/findAllEmployees")
+    @ApiOperation("查询所有员工信息")
+    public Result<List<Employee>> getAll(){
+        return Result.ok(employeeService.list());
+    }
+
+    /**
+     * 根据邮箱查询员工信息
+     * @param email
+     * @return
+     */
+    @GetMapping("/findEmployeeByEmail/{email}")
+    @ApiOperation("根据邮箱查询员工信息")
+    public Result<Employee> getEmployeeByEmail(@PathVariable String email){
+        return Result.ok(employeeService.getEmployeeByEmail(email));
+    }
 
 
 
