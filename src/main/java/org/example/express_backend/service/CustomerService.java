@@ -1,5 +1,8 @@
 package org.example.express_backend.service;
 
+import cn.hutool.json.ObjectMapper;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.example.express_backend.dto.*;
 import org.example.express_backend.entity.Customer;
@@ -114,13 +117,23 @@ public class CustomerService {
      */
     public boolean addAddress(AddAddressDTO addAddressDTO) {
         QueryWrapper<Customer> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("id", addAddressDTO.getId())
-                .select("address");
+        queryWrapper.eq("id", addAddressDTO.getId());
         Customer customer = customerMapper.selectOne(queryWrapper);
         if (customer == null) {
             return false;
         }
-        customer.getAddress().add(addAddressDTO.getAddress());
+
+        JSONArray addressArray;
+
+        if(customer.getAddress() != null && !customer.getAddress().isEmpty()) {
+            addressArray = JSON.parseArray(customer.getAddress().toJSONString());
+        } else {
+            addressArray = new JSONArray();
+        }
+
+        addressArray.add(addAddressDTO.getAddress());
+        String updateAddress = addressArray.toJSONString();
+        customer.setAddress(JSON.parseArray(updateAddress));
         customerMapper.updateById(customer);
         return true;
     }
@@ -132,15 +145,34 @@ public class CustomerService {
      */
     public boolean deleteAddress(AddAddressDTO addAddressDTO) {
         QueryWrapper<Customer> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("id", addAddressDTO.getId())
-                .select("address");
+        queryWrapper.eq("id", addAddressDTO.getId());
         Customer customer = customerMapper.selectOne(queryWrapper);
         if (customer == null) {
             return false;
         }
-        customer.getAddress().remove(addAddressDTO.getAddress());
+
+        JSONArray addressArray = JSON.parseArray(customer.getAddress().toJSONString());
+        addressArray.remove(addAddressDTO.getAddress());
+        String updateAddress = addressArray.toJSONString();
+        customer.setAddress(JSON.parseArray(updateAddress));
         customerMapper.updateById(customer);
         return true;
+    }
+
+    /**
+     * 获取地址簿
+     * @param id 用户ID
+     * @return 地址簿
+     */
+    public JSONArray getAddress(Long id) {
+        QueryWrapper<Customer> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id", id)
+                .select("address");
+        Customer customer = customerMapper.selectOne(queryWrapper);
+        if (customer == null) {
+            return null;
+        }
+        return customer.getAddress();
     }
 
     /**
