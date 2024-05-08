@@ -11,7 +11,7 @@ public class Logistic {
     private String name;
     private Long parentId;
     private String level;
-    private String districtCode;
+    private String district;
     private String city;
     private String province;
     private String contactInfo;
