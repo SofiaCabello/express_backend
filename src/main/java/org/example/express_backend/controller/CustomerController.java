@@ -2,10 +2,7 @@ package org.example.express_backend.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.example.express_backend.dto.AddAddressDTO;
-import org.example.express_backend.dto.CustomerLoginDTO;
-import org.example.express_backend.dto.CustomerRegisterDTO;
-import org.example.express_backend.dto.EmailDTO;
+import org.example.express_backend.dto.*;
 import org.example.express_backend.service.CustomerService;
 import org.example.express_backend.util.Result;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -114,5 +111,18 @@ public class CustomerController {
         } catch (Exception e) {
             return Result.error("获取失败");
         }
+    }
+
+    /**
+     * 修改用户信息
+     * @param customerInfoDTO 用户信息
+     * @return 是否修改成功
+     */
+    @PostMapping("/updateCustomer")
+    public Result updateCustomer(@RequestBody CustomerInfoDTO customerInfoDTO){
+        if(customerService.updateCustomerInfo(customerInfoDTO)){
+            return Result.ok().message("修改成功");
+        }
+        return Result.error("修改失败");
     }
 }

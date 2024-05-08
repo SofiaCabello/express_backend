@@ -185,4 +185,23 @@ public class CustomerService {
         queryWrapper.eq("email", email);
         return customerMapper.selectOne(queryWrapper);
     }
+
+    /**
+     * 修改用户信息，包括username phone email
+     * @param customerInfoDTO 用户信息
+     * @return 是否修改成功
+     */
+    public boolean updateCustomerInfo(CustomerInfoDTO customerInfoDTO) {
+        QueryWrapper<Customer> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id", customerInfoDTO.getId());
+        Customer customer = customerMapper.selectOne(queryWrapper);
+        if (customer == null) {
+            return false;
+        }
+        customer.setUsername(customerInfoDTO.getUsername());
+        customer.setPhone(customerInfoDTO.getPhone());
+        customer.setEmail(customerInfoDTO.getEmail());
+        customerMapper.updateById(customer);
+        return true;
+    }
 }
