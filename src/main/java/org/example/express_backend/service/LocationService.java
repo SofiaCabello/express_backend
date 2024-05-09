@@ -55,22 +55,22 @@ public class LocationService {
         }).collect(Collectors.toList());
     }
 
-    /**
-     * 更新包裹列表的位置
-     *
-     * @param vehicleDto 车辆信息
-     */
-    public void updatePackageLocation(VehicleDto vehicleDto){
-        List<Long> packageIds = packageService.getPackageIdsByVehicleId(vehicleDto.getId());
-        List<Location> locations = new ArrayList<>();
-        for(Long id : packageIds){
-            Location location = Location.builder()
-                    .id(id)
-                    .coordinate(vehicleDto.getCoordinate())
-                    .time(new java.sql.Timestamp(System.currentTimeMillis()))
-                    .build();
-            locations.add(location);
-        }
-        insertPackageLocation(locations);
-    }
+//    /**
+//     * 更新包裹列表的位置
+//     *
+//     * @param vehicleDto 车辆信息
+//     */
+//    public void updatePackageLocation(VehicleDto vehicleDto){
+//        List<Long> packageIds = packageService.getPackageIdsByVehicleId(vehicleDto.getId());
+//        List<Location> locations = new ArrayList<>();
+//        for(Long id : packageIds){
+//            Location location = Location.builder()
+//                    .id(id)
+//                    .coordinate(vehicleDto.getCoordinate())
+//                    .time(new java.sql.Timestamp(System.currentTimeMillis()))
+//                    .build();
+//            locations.add(location);
+//        }
+//        insertPackageLocation(locations);
+//    }
 }

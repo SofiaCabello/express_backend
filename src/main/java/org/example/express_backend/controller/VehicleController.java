@@ -51,18 +51,13 @@ public class VehicleController {
 
     /**
      * 更新载具接口
-     * @param vehicleDto
-     * @return
+     * @param vehicleDto 载具信息
+     * @return 更新结果
      */
     @ApiOperation("更新载具坐标接口")
-    @PostMapping("/updateCoordinate")
-    public Result UpdateCoordinate(VehicleDto vehicleDto) {
-        Vehicle vehicle = new Vehicle();
-        BeanUtil.copyProperties(vehicleDto, vehicle);
-        vehicleService.updateById(vehicle);
-        locationService.updatePackageLocation(vehicleDto);
-        return Result.ok();
+    @PostMapping("/insertCoordinate")
+    public Result insertCoordinate(@RequestBody VehicleDto vehicleDto) {
+        vehicleService.insertVehicleLocation(vehicleDto);
+        return Result.ok().message("更新成功");
     }
-
-
 }

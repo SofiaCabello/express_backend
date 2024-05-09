@@ -37,6 +37,7 @@ public class BatchService {
                 .destination(DTO.getDestination())
                 .responsible(DTO.getResponsible())
                 .status(Batch.statusEnum.IN_TRANS.getStatus())
+                .vehicleId(DTO.getVehicleId())
                 .build();
         try {
             batchMapper.insert(batch);

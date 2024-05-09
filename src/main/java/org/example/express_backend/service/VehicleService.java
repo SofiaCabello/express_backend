@@ -2,8 +2,12 @@ package org.example.express_backend.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.example.express_backend.dto.VehicleDto;
 import org.example.express_backend.entity.Vehicle;
+import org.example.express_backend.entity.VehicleLocation;
+import org.example.express_backend.mapper.VehicleLocationMapper;
 import org.example.express_backend.mapper.VehicleMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -16,5 +20,18 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class VehicleService extends ServiceImpl<VehicleMapper, Vehicle> implements IService<Vehicle> {
+    @Autowired
+    private VehicleLocationMapper vehicleLocationMapper;
 
+    /**
+     * 插入载具位置
+     * @param vehicleDto 载具位置信息
+     */
+    public void insertVehicleLocation(VehicleDto vehicleDto) {
+        VehicleLocation location = VehicleLocation.builder()
+                .vehicleId(vehicleDto.getId())
+                .coordinate(vehicleDto.getCoordinate())
+                .build();
+        vehicleLocationMapper.insert(location);
+    }
 }
