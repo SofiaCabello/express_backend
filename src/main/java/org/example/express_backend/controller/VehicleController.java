@@ -37,16 +37,14 @@ public class VehicleController {
 
     /**
      * 新增载具接口
-     * @param vehicleDto
-     * @return
+     * @param vehicle 载具信息
+     * @return  新增结果
      */
     @ApiOperation("新增载具接口")
     @PostMapping("/save")
-    public Result saveVehicle(@RequestBody VehicleDto vehicleDto) {
-        Vehicle vehicle = new Vehicle();
-        BeanUtil.copyProperties(vehicleDto, vehicle);
-        vehicleService.save(vehicle);
-        return Result.ok();
+    public Result saveVehicle(@RequestBody Vehicle vehicle) {
+        vehicleService.insert(vehicle);
+        return Result.ok().message("新增成功");
     }
 
     /**

@@ -3,6 +3,7 @@ package org.example.express_backend.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.example.express_backend.dto.VehicleDto;
+import org.example.express_backend.entity.Point;
 import org.example.express_backend.entity.Vehicle;
 import org.example.express_backend.entity.VehicleLocation;
 import org.example.express_backend.mapper.VehicleLocationMapper;
@@ -28,10 +29,13 @@ public class VehicleService extends ServiceImpl<VehicleMapper, Vehicle> implemen
      * @param vehicleDto 载具位置信息
      */
     public void insertVehicleLocation(VehicleDto vehicleDto) {
-        VehicleLocation location = VehicleLocation.builder()
-                .vehicleId(vehicleDto.getId())
-                .coordinate(vehicleDto.getCoordinate())
-                .build();
-        vehicleLocationMapper.insert(location);
+        Point point = new Point();
+        point = vehicleDto.getCoordinate();
+        String pointStr = point.makePoint();
+        vehicleLocationMapper.insertVehicleLocationWithPoint(vehicleDto.getId(), pointStr);
+    }
+
+    public void insert (Vehicle vehicle) {
+        this.save(vehicle);
     }
 }

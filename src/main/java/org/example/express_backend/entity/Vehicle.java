@@ -37,8 +37,4 @@ public class Vehicle implements Serializable {
     @TableField("shift")
     private String shift;
 
-    @TableField("coordinate")
-    private Point coordinate;
-
-
 }
