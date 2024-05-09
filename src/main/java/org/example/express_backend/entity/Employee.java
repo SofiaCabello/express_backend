@@ -11,6 +11,5 @@ public class Employee {
     private String phone;
     private String email;
     private String passwordHash;
-    private String salt;
     private Long serveAt;
 }

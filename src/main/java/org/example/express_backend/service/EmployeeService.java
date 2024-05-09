@@ -73,7 +73,7 @@ public class EmployeeService extends ServiceImpl<EmployeeMapper, Employee> imple
         //对象属性拷贝
         BeanUtils.copyProperties(employeeDTO, employee);
 
-        String password = employeeDTO.getPassword();
+        String password = employeeDTO.getPasswordHash();
 /*        //设置密码，默认密码123456
         employee.setPassword(DigestUtils.md5DigestAsHex(PasswordConstant.DEFAULT_PASSWORD.getBytes()));*/
 
@@ -85,10 +85,11 @@ public class EmployeeService extends ServiceImpl<EmployeeMapper, Employee> imple
     /**
      * 修改员工
      *
-     * @param employeeDTO
+     * @param employee
      */
-    public void update(EmployeeDTO employeeDTO) {
-        this.update(employeeDTO);
+    public void update(Employee employee) {
+        //根据mybatis-plus提供的方法，直接修改
+        employeeMapper.updateById(employee);
     }
 
 
