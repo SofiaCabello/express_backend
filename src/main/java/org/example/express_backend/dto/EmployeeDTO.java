@@ -9,7 +9,7 @@ import lombok.ToString;
 public class EmployeeDTO {
     private String name;
     private String phone;
-    private String passwordHash;
+    private String password;
     private String email;
     private Long serveAt;
 }
