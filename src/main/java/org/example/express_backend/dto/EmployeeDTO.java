@@ -1,5 +1,6 @@
 package org.example.express_backend.dto;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 import lombok.ToString;
 
@@ -8,7 +9,7 @@ import lombok.ToString;
 public class EmployeeDTO {
     private String name;
     private String phone;
-    private String password;
-    private String salt;
-    private String serveAt;
+    private String passwordHash;
+    private String email;
+    private Long serveAt;
 }

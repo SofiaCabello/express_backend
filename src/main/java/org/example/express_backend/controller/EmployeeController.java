@@ -40,6 +40,7 @@ public class EmployeeController {
 
         //登录成功后，生成jwt令牌
         String token = JwtUtil.generateToken(employee.getEmail());
+        log.info("token为：" + token);
 
         EmployeeLoginVO employeeLoginVO = EmployeeLoginVO.builder()
                 .id(employee.getId())
@@ -92,9 +93,9 @@ public class EmployeeController {
 
     @PostMapping("/update")
     @ApiOperation("修改员工信息")
-    public Result update(@RequestBody EmployeeDTO employeeDTO){
-        log.info("修改员工信息：{}",employeeDTO);
-        employeeService.update(employeeDTO);
+    public Result update(@RequestBody Employee employee){
+        log.info("修改员工信息：{}",employee);
+        employeeService.update(employee);
         return Result.ok();
     }
 
