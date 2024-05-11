@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 运单服务类
@@ -114,6 +116,6 @@ public class ShipmentService {
     public List<Long> getShipmentIdsByCustomerId(Long customerId){
         QueryWrapper<Shipment> wrapper = new QueryWrapper<>();
         wrapper.eq("customer_id", customerId);
-        return shipmentMapper.selectList(wrapper).stream().map(Shipment::getId).toList();
+        return shipmentMapper.selectList(wrapper).stream().map(Shipment::getId).collect(Collectors.toList());
     }
 }
