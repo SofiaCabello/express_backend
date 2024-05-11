@@ -29,9 +29,19 @@ public class AdminEmployeeController {
     AdminEmployeeService adminEmployeeService;
 
     //获取所有员工分页信息
-    @GetMapping("/page")
+    @GetMapping("/getAllPages")
     public BackPage<Employee> queryEmployeesPage(@RequestParam("pageNo") Long pageNo, @RequestParam("pageSize") Long pageSize) {
         return adminEmployeeService.queryEmployeesPage(pageNo, pageSize);
+    }
+
+    /**
+     * 根据用户id查询员工信息
+     * @param id
+     * @return
+     */
+    @GetMapping("/getEmployeeById")
+    public Result<Employee> getEmployeeById(@RequestParam("id") Long id) {
+        return Result.ok(adminEmployeeService.getById(id));
     }
 
     //修改员工信息,返回信息用Result封装，使用mybatisPlus的updateById方法

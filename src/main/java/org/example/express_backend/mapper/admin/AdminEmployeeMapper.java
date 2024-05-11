@@ -6,7 +6,7 @@ import org.mapstruct.Mapper;
 
 /**
  * @Classname AdminEmployeeMapper
- * @Description TODO
+ * @Description 管理员员工管理
  * @Date 2024/5/11 8:15
  * @Created by Zhiend
  */
