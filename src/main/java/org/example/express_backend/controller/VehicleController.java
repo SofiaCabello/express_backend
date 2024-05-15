@@ -55,7 +55,12 @@ public class VehicleController {
     @ApiOperation("更新载具坐标接口")
     @PostMapping("/insertCoordinate")
     public Result insertCoordinate(@RequestBody VehicleDto vehicleDto) {
-        vehicleService.insertVehicleLocation(vehicleDto);
-        return Result.ok().message("更新成功");
+        try {
+            vehicleService.insertVehicleLocation(vehicleDto);
+            return Result.ok().message("更新成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.error("更新失败");
+        }
     }
 }
