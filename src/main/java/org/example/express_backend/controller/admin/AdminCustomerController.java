@@ -29,7 +29,7 @@ public class AdminCustomerController {
     @Autowired
     private AdminCustomerService adminCustomerService;
 
-    /**j
+    /**
      * 获取所有用户信息
      * @return 所有用户信息
      */
