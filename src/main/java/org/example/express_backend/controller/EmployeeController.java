@@ -45,6 +45,8 @@ public class EmployeeController {
         EmployeeLoginVO employeeLoginVO = EmployeeLoginVO.builder()
                 .id(employee.getId())
                 .eamil(employee.getEmail())
+                .name(employee.getName())
+                .phone(employee.getPhone())
                 .token(token)
                 .build();
 
