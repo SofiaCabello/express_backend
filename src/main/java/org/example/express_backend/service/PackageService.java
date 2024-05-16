@@ -2,21 +2,27 @@ package org.example.express_backend.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.exceptions.MybatisPlusException;
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.example.express_backend.dto.CalculatePriceDTO;
 import org.example.express_backend.dto.CreatePackageDTO;
 import org.example.express_backend.dto.PackageBatchDTO;
 import org.example.express_backend.entity.Package;
 import org.example.express_backend.entity.Shipment;
 import org.example.express_backend.mapper.PackageMapper;
+import org.example.express_backend.mapper.admin.AdminPackageMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
-public class PackageService {
+public class PackageService extends ServiceImpl<PackageMapper, Package> implements IService<Package> {
     @Autowired
     private PackageMapper packageMapper;
     @Autowired
@@ -245,5 +251,23 @@ public class PackageService {
         queryWrapper.eq("vehicle_id", vehicleId);
         List<Package> packages = packageMapper.selectList(queryWrapper);
         return packages.stream().map(Package::getId).collect(Collectors.toList());
+    }
+
+    public int[] getDataBySeven() {
+        int[] packageCounts = new int[7]; // 用于存储七天内每天的包裹数量
+        LocalDate today = LocalDate.now();
+        LocalDate oneWeekAgo = today.minusDays(6); // 获取一周前的日期
+
+        for (int i = 0; i < 7; i++) {
+            LocalDate date = today.minusDays(i);
+            Timestamp timestamp = Timestamp.valueOf(date.atStartOfDay()); // 将LocalDate转换为Timestamp
+
+            QueryWrapper<Package> queryWrapper = new QueryWrapper<>();
+            queryWrapper.apply("DATE(create_date) = DATE('" + timestamp + "')"); // 过滤指定日期的数据
+            int count = this.count(queryWrapper); // 查询符合条件的包裹数量
+            packageCounts[6 - i] = count; // 注意，数组下标应该反过来，因为从当前日期往前数
+        }
+
+        return packageCounts;
     }
 }

@@ -123,6 +123,4 @@ public class EmployeeController {
         return Result.ok(employeeService.getEmployeeByEmail(email));
     }
 
-
-
 }
