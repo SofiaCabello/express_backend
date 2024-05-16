@@ -1,17 +1,13 @@
 package org.example.express_backend.service;
 
-import com.baomidou.mybatisplus.core.conditions.query.Query;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.example.express_backend.dto.LocationDTO;
 import org.example.express_backend.dto.LocationResultDTO;
-import org.example.express_backend.dto.VehicleDto;
 import org.example.express_backend.entity.Location;
 import org.example.express_backend.mapper.LocationMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;

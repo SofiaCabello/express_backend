@@ -1,7 +1,6 @@
 package org.example.express_backend.controller;
 
 import org.example.express_backend.dto.LocationDTO;
-import org.example.express_backend.entity.Location;
 import org.example.express_backend.service.LocationService;
 import org.example.express_backend.util.Result;
 import org.springframework.beans.factory.annotation.Autowired;
