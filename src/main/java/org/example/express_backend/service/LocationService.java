@@ -1,6 +1,8 @@
 package org.example.express_backend.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.Query;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import org.example.express_backend.dto.LocationDTO;
 import org.example.express_backend.dto.LocationResultDTO;
 import org.example.express_backend.dto.VehicleDto;
 import org.example.express_backend.entity.Location;
@@ -24,15 +26,27 @@ public class LocationService {
     @Autowired
     private PackageService packageService;
 
+
     /**
      * 插入包裹位置
-     * @param locations 位置信息
+     * @param locationDTO 位置信息
      */
-    private void insertPackageLocation(List<Location> locations){
-        for(Location location : locations){
-            locationMapper.insert(location);
+    public void insertPackageLocation(LocationDTO locationDTO) {
+        // 1. 获取批次id，查询包裹id
+        Long batchId = locationDTO.getBatchId();
+        List<Long> packageIds = packageService.getPackageIdsByBatchId(batchId);
+        // 2. 插入位置信息
+        List<Location> locations = new ArrayList<>();
+        for(Long id : packageIds){
+            Location location = Location.builder()
+                    .id(id)
+                    .coordinate(locationDTO.getCoordinate())
+                    .build();
+            locations.add(location);
         }
+        locationMapper.insertBatch(locations);
     }
+
 
     /**
      * 根据id获取包裹位置
@@ -40,19 +54,12 @@ public class LocationService {
      * @return 位置信息
      */
     public List<LocationResultDTO> getPackageLocation(Long id) {
-        QueryWrapper<Location> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("id", id);
-        List<Location> locations = locationMapper.selectList(queryWrapper);
+        // 1. 根据包裹id查批次id
+        Long batchId = packageService.getPackageById(id).getBatchId();
+        // 2. 根据批次id查车辆id
+        // Long vehicleId =
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
-        return locations.stream().map(location -> {
-            LocationResultDTO locationResultDTO = new LocationResultDTO();
-            LocalDateTime time = location.getTime().toLocalDateTime();
-            locationResultDTO.setTime(time.format(formatter)); // 使用formatter来格式化时间字符串
-            locationResultDTO.setCoordinate(location.getCoordinate());
-            return locationResultDTO;
-        }).collect(Collectors.toList());
+        return null;
     }
 
 //    /**

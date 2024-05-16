@@ -59,6 +59,18 @@ public class PackageService {
     }
 
     /**
+     * 根据批次id获取包裹id
+     * @param batchId 批次id
+     * @return 查询到的包裹id
+     */
+    public List<Long> getPackageIdsByBatchId(Long batchId) {
+        QueryWrapper<Package> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("batch_id", batchId);
+        List<Package> packages = packageMapper.selectList(queryWrapper);
+        return packages.stream().map(Package::getId).collect(Collectors.toList());
+    }
+
+    /**
      * 根据运单id获取包裹
      * @param shipmentId 运单id
      * @return 查询到的包裹

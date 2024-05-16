@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 public class BatchService {
     @Autowired
     private BatchMapper batchMapper;
+    @Autowired
+    private LocationService locationService;
 
     /**
      * 生成批次Id
@@ -53,6 +55,7 @@ public class BatchService {
      * @param DTO 更新批次状态的信息
      * @return 是否更新成功
      */
+    // TODO: 更新批次状态时，要将批次所在车辆的位置信息复制到Location表中，以作备份
     public boolean updateBatchStatus(UpdateBatchStatusDTO DTO) {
         Batch batch = batchMapper.selectById(DTO.getBatchId());
         if (batch == null) {

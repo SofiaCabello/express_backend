@@ -14,6 +14,6 @@ public class Point {
     private Double longitude; // 纬度
 
     public String makePoint() {
-        return String.format("POINT(%f %f)", longitude, latitude);
+        return String.format("POINT(%f %f)", latitude, longitude);
     }
 }
