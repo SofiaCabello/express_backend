@@ -54,12 +54,13 @@ public class LocationService {
      * @return 位置信息
      */
     public List<LocationResultDTO> getPackageLocation(Long id) {
-        // 1. 根据包裹id查批次id
-        Long batchId = packageService.getPackageById(id).getBatchId();
-        // 2. 根据批次id查车辆id
-        // Long vehicleId =
-
-        return null;
+        QueryWrapper<Location> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id", id);
+        List<Location> locations = locationMapper.selectList(queryWrapper);
+        return locations.stream().map(location -> LocationResultDTO.builder()
+                .coordinate(location.getCoordinate())
+                .time(location.getTime())
+                .build()).collect(Collectors.toList());
     }
 
 //    /**

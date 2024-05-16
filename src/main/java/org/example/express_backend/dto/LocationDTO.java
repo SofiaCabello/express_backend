@@ -16,5 +16,4 @@ import java.sql.Timestamp;
 public class LocationDTO implements Serializable {
     private Long batchId;
     private Point coordinate;
-    private Timestamp time;
 }

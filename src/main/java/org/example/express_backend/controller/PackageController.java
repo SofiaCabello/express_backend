@@ -135,13 +135,5 @@ public class PackageController {
         }
     }
 
-    /**
-     * 根据包裹id获取包裹位置历史信息
-     * @param id 包裹id
-     * @return 查询到的包裹位置历史信息
-     */
-    @GetMapping("/getPackageLocation")
-    public Result getPackageLocation(@RequestParam(required = true) Long id) {
-        return Result.ok(locationService.getPackageLocation(id)).message("获取包裹位置成功");
-    }
+
 }
