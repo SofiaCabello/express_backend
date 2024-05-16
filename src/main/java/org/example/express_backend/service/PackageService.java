@@ -10,7 +10,6 @@ import org.example.express_backend.dto.PackageBatchDTO;
 import org.example.express_backend.entity.Package;
 import org.example.express_backend.entity.Shipment;
 import org.example.express_backend.mapper.PackageMapper;
-import org.example.express_backend.mapper.admin.AdminPackageMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
