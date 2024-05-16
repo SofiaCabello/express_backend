@@ -1,16 +1,20 @@
 package org.example.express_backend.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.example.express_backend.entity.Logistic;
 import org.example.express_backend.mapper.LogisticMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
-public class LogisticService {
+public class LogisticService extends ServiceImpl<LogisticMapper, Logistic> implements IService<Logistic> {
     @Autowired
     private LogisticMapper logisticMapper;
 
@@ -56,5 +60,32 @@ public class LogisticService {
         transferRoute.add(destinationId);
         System.out.println("transferRoute: " + transferRoute);
         return transferRoute;
+    }
+
+    public Map<String, int[]> getCountsByLevel(String level) {
+        Map<String, int[]> countsMap = new HashMap<>();
+
+        QueryWrapper<Logistic> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("level", level);
+
+        List<Logistic> logistics = logisticMapper.selectList(queryWrapper);
+
+        // 初始化统计数组
+        int[] counts = new int[logistics.size()];
+
+        // 根据省份分类统计网点数量
+        Map<String, Integer> provinceCounts = new HashMap<>();
+        for (int i = 0; i < logistics.size(); i++) {
+            Logistic logistic = logistics.get(i);
+            String province = logistic.getProvince();
+            provinceCounts.put(province, provinceCounts.getOrDefault(province, 0) + 1);
+        }
+
+        // 将统计结果放入结果集
+        provinceCounts.forEach((province, count) -> {
+            countsMap.put(province, new int[]{count});
+        });
+
+        return countsMap;
     }
 }
