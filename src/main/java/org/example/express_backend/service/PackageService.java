@@ -168,8 +168,8 @@ public class PackageService extends ServiceImpl<PackageMapper, Package> implemen
      * @return 包裹id
      */
     private Long generatePackageId(Long shipmentId) {
-        // 取时间戳的后7位
-        String timestamp = String.valueOf(System.currentTimeMillis()).substring(7);
+        // 取时间戳后3位
+        String timestamp = String.valueOf(System.currentTimeMillis()).substring(10);
         return Long.parseLong(shipmentId.toString() + timestamp);
     }
 
