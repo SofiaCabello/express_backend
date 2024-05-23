@@ -260,7 +260,7 @@ public class PackageService extends ServiceImpl<PackageMapper, Package> implemen
 
 
     /**
-     * 添加包裹的转运批次ids
+     * 添加包裹到转运批次
      * @param packageBatchDTO
      * @return
      */
@@ -269,6 +269,9 @@ public class PackageService extends ServiceImpl<PackageMapper, Package> implemen
                 packageBatchDTO.getPackageIds()) {
             Package aPackage = packageMapper.selectById(id);
             aPackage.setBatchId(packageBatchDTO.getBatchId());
+            aPackage.setStatus(Package.statusEnum.IN_TRANSIT.getStatus());
+            QueryWrapper<Package> queryWrapper = new QueryWrapper<>();
+            packageMapper.update(aPackage, queryWrapper);
         }
         return true;
     }
