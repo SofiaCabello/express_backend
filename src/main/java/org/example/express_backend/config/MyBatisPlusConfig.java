@@ -21,4 +21,17 @@ public class MyBatisPlusConfig {
     public IKeyGenerator iKeyGenerator(){
         return new H2KeyGenerator();
     }
+
+//    @Bean
+//    public SqlSessionFactory sqlSessionFactory(DataSource dataSource) throws Exception{
+//        SqlSessionFactoryBean sessionFactory = new SqlSessionFactoryBean();
+//        sessionFactory.setDataSource(dataSource);
+//
+//        SqlSessionFactory factory = sessionFactory.getObject();
+//
+//        TypeHandlerRegistry typeHandlerRegistry = factory.getConfiguration().getTypeHandlerRegistry();
+//        typeHandlerRegistry.register(Point.class, PointTypeHandler.class);
+//
+//        return factory;
+//    }
 }

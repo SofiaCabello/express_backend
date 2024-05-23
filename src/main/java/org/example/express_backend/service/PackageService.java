@@ -2,9 +2,12 @@ package org.example.express_backend.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.exceptions.MybatisPlusException;
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.example.express_backend.dto.CalculatePriceDTO;
 import org.example.express_backend.dto.CreatePackageDTO;
 import org.example.express_backend.dto.PackageBatchDTO;
+import org.example.express_backend.dto.UpdatePackageDTO;
 import org.example.express_backend.entity.Package;
 import org.example.express_backend.entity.Shipment;
 import org.example.express_backend.mapper.PackageMapper;
@@ -12,11 +15,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
-public class PackageService {
+public class PackageService extends ServiceImpl<PackageMapper, Package> implements IService<Package> {
     @Autowired
     private PackageMapper packageMapper;
     @Autowired
@@ -56,6 +62,18 @@ public class PackageService {
             return false;
         }
         return true;
+    }
+
+    /**
+     * 根据批次id获取包裹id
+     * @param batchId 批次id
+     * @return 查询到的包裹id
+     */
+    public List<Long> getPackageIdsByBatchId(Long batchId) {
+        QueryWrapper<Package> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("batch_id", batchId);
+        List<Package> packages = packageMapper.selectList(queryWrapper);
+        return packages.stream().map(Package::getId).collect(Collectors.toList());
     }
 
     /**
@@ -151,8 +169,8 @@ public class PackageService {
      * @return 包裹id
      */
     private Long generatePackageId(Long shipmentId) {
-        // 取时间戳的后7位
-        String timestamp = String.valueOf(System.currentTimeMillis()).substring(7);
+        // 取时间戳后3位
+        String timestamp = String.valueOf(System.currentTimeMillis()).substring(10);
         return Long.parseLong(shipmentId.toString() + timestamp);
     }
 
@@ -215,7 +233,45 @@ public class PackageService {
     }
 
     /**
-     * 添加包裹的转运批次ids
+     * 获取未揽收的包裹
+     */
+    public List<Package> getUnpickedPackages(Long origin) {
+        QueryWrapper<Shipment> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("origin", origin);
+        List<Long> shipmentIds = shipmentService.getShipmentIdsByOrigin(origin);
+        QueryWrapper<Package> queryWrapper1 = new QueryWrapper<>();
+        queryWrapper1.in("shipment_id", shipmentIds);
+        queryWrapper1.eq("status", Package.statusEnum.PENDING.getStatus());
+        return packageMapper.selectList(queryWrapper1);
+    }
+
+    /**
+     * 获取未派送的包裹
+     */
+    public List<Package> getUndeliveredPackages(Long destination) {
+        QueryWrapper<Shipment> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("destination", destination);
+        List<Long> shipmentIds = shipmentService.getShipmentIdsByDestination(destination);
+        QueryWrapper<Package> queryWrapper1 = new QueryWrapper<>();
+        queryWrapper1.in("shipment_id", shipmentIds);
+        queryWrapper1.eq("status", Package.statusEnum.IN_TRANSIT.getStatus());
+        return packageMapper.selectList(queryWrapper1);
+    }
+
+    /**
+     * 修正包裹的重量和尺寸信息，并同步更新运单价格
+     */
+    public boolean updatePackageInfo(UpdatePackageDTO updatePackageDTO){
+        QueryWrapper<Package> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id", updatePackageDTO.getPackageId());
+        Package aPackage = packageMapper.selectOne(queryWrapper);
+        aPackage.setWeight(updatePackageDTO.getWeight());
+        aPackage.setSize(updatePackageDTO.getSize());
+        return packageMapper.updateById(aPackage) == 1;
+    }
+
+    /**
+     * 添加包裹到转运批次
      * @param packageBatchDTO
      * @return
      */
@@ -224,6 +280,9 @@ public class PackageService {
                 packageBatchDTO.getPackageIds()) {
             Package aPackage = packageMapper.selectById(id);
             aPackage.setBatchId(packageBatchDTO.getBatchId());
+            aPackage.setStatus(Package.statusEnum.IN_TRANSIT.getStatus());
+            QueryWrapper<Package> queryWrapper = new QueryWrapper<>();
+            packageMapper.updateById(aPackage);
         }
         return true;
     }
@@ -233,5 +292,23 @@ public class PackageService {
         queryWrapper.eq("vehicle_id", vehicleId);
         List<Package> packages = packageMapper.selectList(queryWrapper);
         return packages.stream().map(Package::getId).collect(Collectors.toList());
+    }
+
+    public int[] getDataBySeven() {
+        int[] packageCounts = new int[7]; // 用于存储七天内每天的包裹数量
+        LocalDate today = LocalDate.now();
+        LocalDate oneWeekAgo = today.minusDays(6); // 获取一周前的日期
+
+        for (int i = 0; i < 7; i++) {
+            LocalDate date = today.minusDays(i);
+            Timestamp timestamp = Timestamp.valueOf(date.atStartOfDay()); // 将LocalDate转换为Timestamp
+
+            QueryWrapper<Package> queryWrapper = new QueryWrapper<>();
+            queryWrapper.apply("DATE(create_date) = DATE('" + timestamp + "')"); // 过滤指定日期的数据
+            int count = this.count(queryWrapper); // 查询符合条件的包裹数量
+            packageCounts[6 - i] = count; // 注意，数组下标应该反过来，因为从当前日期往前数
+        }
+
+        return packageCounts;
     }
 }

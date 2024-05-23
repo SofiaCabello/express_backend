@@ -46,4 +46,14 @@ public class BatchController {
             return Result.error("更新批次状态失败");
         }
     }
+
+    /**
+     * 批次统计7天的创建数据
+     * @return 批次统计7天的创建数据
+     */
+    @ApiOperation("批次统计7天的创建数据")
+    @GetMapping("/dataBySeven")
+    public Result<int []> getDataBySeven() {
+        return Result.ok(batchService.getDataBySeven());
+    }
 }

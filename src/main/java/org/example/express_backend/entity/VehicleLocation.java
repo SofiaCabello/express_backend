@@ -5,15 +5,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.Timestamp;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Point {
-    private Double latitude; // 经度
-    private Double longitude; // 纬度
-
-    public String makePoint() {
-        return String.format("POINT(%f %f)", latitude, longitude);
-    }
+public class VehicleLocation {
+    private Long id;
+    private Long vehicleId;
+    private Point coordinate;
+    private Timestamp createdAt;
 }

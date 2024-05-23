@@ -16,6 +16,7 @@ public class Package {
     private String receiverPhone;
     private String receiverAddress;
     private Timestamp signDate;
+    private Timestamp createDate;
     private String status;
     private Long shipmentId;
     private Long batchId;

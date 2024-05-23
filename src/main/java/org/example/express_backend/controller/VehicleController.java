@@ -1,7 +1,6 @@
 package org.example.express_backend.controller;
 
 
-import cn.hutool.core.bean.BeanUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -37,32 +36,30 @@ public class VehicleController {
 
     /**
      * 新增载具接口
-     * @param vehicleDto
-     * @return
+     * @param vehicle 载具信息
+     * @return  新增结果
      */
     @ApiOperation("新增载具接口")
     @PostMapping("/save")
-    public Result saveVehicle(@RequestBody VehicleDto vehicleDto) {
-        Vehicle vehicle = new Vehicle();
-        BeanUtil.copyProperties(vehicleDto, vehicle);
-        vehicleService.save(vehicle);
-        return Result.ok();
+    public Result saveVehicle(@RequestBody Vehicle vehicle) {
+        vehicleService.insert(vehicle);
+        return Result.ok().message("新增成功");
     }
 
     /**
      * 更新载具接口
-     * @param vehicleDto
-     * @return
+     * @param vehicleDto 载具信息
+     * @return 更新结果
      */
     @ApiOperation("更新载具坐标接口")
-    @PostMapping("/updateCoordinate")
-    public Result UpdateCoordinate(VehicleDto vehicleDto) {
-        Vehicle vehicle = new Vehicle();
-        BeanUtil.copyProperties(vehicleDto, vehicle);
-        vehicleService.updateById(vehicle);
-        locationService.updatePackageLocation(vehicleDto);
-        return Result.ok();
+    @PostMapping("/insertCoordinate")
+    public Result insertCoordinate(@RequestBody VehicleDto vehicleDto) {
+        try {
+            vehicleService.insertVehicleLocation(vehicleDto);
+            return Result.ok().message("更新成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.error("更新失败");
+        }
     }
-
-
 }

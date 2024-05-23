@@ -5,6 +5,8 @@ import io.swagger.annotations.ApiOperation;
 import org.example.express_backend.dto.CalculatePriceDTO;
 import org.example.express_backend.dto.CreatePackageDTO;
 import org.example.express_backend.dto.PackageBatchDTO;
+import org.example.express_backend.dto.UpdatePackageDTO;
+import org.example.express_backend.entity.Package;
 import org.example.express_backend.service.LocationService;
 import org.example.express_backend.service.PackageService;
 import org.example.express_backend.util.Result;
@@ -136,12 +138,46 @@ public class PackageController {
     }
 
     /**
-     * 根据包裹id获取包裹位置历史信息
-     * @param id 包裹id
-     * @return 查询到的包裹位置历史信息
+     * 获取当前地区未揽收的包裹
+     * @param logisticId 区域id
+     * @return 是否成功
      */
-    @GetMapping("/getPackageLocation")
-    public Result getPackageLocation(@RequestParam(required = true) Long id) {
-        return Result.ok(locationService.getPackageLocation(id)).message("获取包裹位置成功");
+    @GetMapping("/getUnpicked")
+    public Result getUnpickedPackages(@RequestParam(required = true) Long logisticId) {
+        try {
+            return Result.ok(packageService.getUnpickedPackages(logisticId)).message("获取成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.error("获取失败");
+        }
+    }
+
+    /**
+     * 获取当前地区未派送的包裹
+     * @param logisticId 区域id
+     * @return 是否成功
+     */
+    @GetMapping("/getUndelivered")
+    public Result getUndeliveredPackages(@RequestParam(required = true) Long logisticId) {
+        try {
+            return Result.ok(packageService.getUndeliveredPackages(logisticId)).message("获取成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.error("获取失败");
+        }
+    }
+
+    /**
+     * 更新包裹的重量和尺寸信息
+     * @param updatePackageDTO 要更新的信息
+     * @return 是否成功
+     */
+    @PostMapping("/updatePackageInfo")
+    public Result updatePackageInfo(@RequestBody UpdatePackageDTO updatePackageDTO){
+        if(packageService.updatePackageInfo(updatePackageDTO)){
+            return Result.ok().message("更新成功");
+        } else {
+            return Result.error("更新失败");
+        }
     }
 }

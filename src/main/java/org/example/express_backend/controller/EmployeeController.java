@@ -13,6 +13,8 @@ import org.example.express_backend.vo.EmployeeLoginVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/employee")
 @Slf4j
@@ -38,10 +40,13 @@ public class EmployeeController {
 
         //登录成功后，生成jwt令牌
         String token = JwtUtil.generateToken(employee.getEmail());
+        log.info("token为：" + token);
 
         EmployeeLoginVO employeeLoginVO = EmployeeLoginVO.builder()
                 .id(employee.getId())
                 .eamil(employee.getEmail())
+                .name(employee.getName())
+                .phone(employee.getPhone())
                 .token(token)
                 .build();
 
@@ -75,18 +80,47 @@ public class EmployeeController {
         return Result.ok();
     }
 
-/*    *//**
+
+    /**
      * 根据id查询员工信息
      * @param id
      * @return
-     *//*
+     */
     @GetMapping("/{id}")
     @ApiOperation("根据id查询员工信息")
     public Result<Employee> getById(@PathVariable Long id){
         Employee employee = employeeService.getById(id);
         return Result.ok(employee);
-    }*/
+    }
+
+    @PostMapping("/update")
+    @ApiOperation("修改员工信息")
+    public Result update(@RequestBody Employee employee){
+        log.info("修改员工信息：{}",employee);
+        employeeService.update(employee);
+        return Result.ok();
+    }
 
 
+    /**
+     * 查询所有员工信息
+     * @return
+     */
+    @GetMapping("/findAllEmployees")
+    @ApiOperation("查询所有员工信息")
+    public Result<List<Employee>> getAll(){
+        return Result.ok(employeeService.list());
+    }
+
+    /**
+     * 根据邮箱查询员工信息
+     * @param email
+     * @return
+     */
+    @GetMapping("/findEmployeeByEmail/{email}")
+    @ApiOperation("根据邮箱查询员工信息")
+    public Result<Employee> getEmployeeByEmail(@PathVariable String email){
+        return Result.ok(employeeService.getEmployeeByEmail(email));
+    }
 
 }
