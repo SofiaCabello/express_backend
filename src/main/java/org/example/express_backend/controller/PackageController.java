@@ -5,6 +5,8 @@ import io.swagger.annotations.ApiOperation;
 import org.example.express_backend.dto.CalculatePriceDTO;
 import org.example.express_backend.dto.CreatePackageDTO;
 import org.example.express_backend.dto.PackageBatchDTO;
+import org.example.express_backend.dto.UpdatePackageDTO;
+import org.example.express_backend.entity.Package;
 import org.example.express_backend.service.LocationService;
 import org.example.express_backend.service.PackageService;
 import org.example.express_backend.util.Result;
@@ -138,7 +140,7 @@ public class PackageController {
     /**
      * 获取当前地区未揽收的包裹
      * @param logisticId 区域id
-     * @return 未揽收的包裹
+     * @return 是否成功
      */
     @GetMapping("/getUnpicked")
     public Result getUnpickedPackages(@RequestParam(required = true) Long logisticId) {
@@ -153,7 +155,7 @@ public class PackageController {
     /**
      * 获取当前地区未派送的包裹
      * @param logisticId 区域id
-     * @return 未派送的包裹
+     * @return 是否成功
      */
     @GetMapping("/getUndelivered")
     public Result getUndeliveredPackages(@RequestParam(required = true) Long logisticId) {
@@ -162,6 +164,20 @@ public class PackageController {
         } catch (Exception e) {
             e.printStackTrace();
             return Result.error("获取失败");
+        }
+    }
+
+    /**
+     * 更新包裹的重量和尺寸信息
+     * @param updatePackageDTO 要更新的信息
+     * @return 是否成功
+     */
+    @PostMapping("/updatePackageInfo")
+    public Result updatePackageInfo(@RequestBody UpdatePackageDTO updatePackageDTO){
+        if(packageService.updatePackageInfo(updatePackageDTO)){
+            return Result.ok().message("更新成功");
+        } else {
+            return Result.error("更新失败");
         }
     }
 }

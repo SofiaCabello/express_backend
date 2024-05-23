@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.example.express_backend.dto.CalculatePriceDTO;
 import org.example.express_backend.dto.CreatePackageDTO;
 import org.example.express_backend.dto.PackageBatchDTO;
+import org.example.express_backend.dto.UpdatePackageDTO;
 import org.example.express_backend.entity.Package;
 import org.example.express_backend.entity.Shipment;
 import org.example.express_backend.mapper.PackageMapper;
@@ -257,7 +258,17 @@ public class PackageService extends ServiceImpl<PackageMapper, Package> implemen
         return packageMapper.selectList(queryWrapper1);
     }
 
-
+    /**
+     * 修正包裹的重量和尺寸信息，并同步更新运单价格
+     */
+    public boolean updatePackageInfo(UpdatePackageDTO updatePackageDTO){
+        QueryWrapper<Package> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id", updatePackageDTO.getPackageId());
+        Package aPackage = packageMapper.selectOne(queryWrapper);
+        aPackage.setWeight(updatePackageDTO.getWeight());
+        aPackage.setSize(updatePackageDTO.getSize());
+        return packageMapper.updateById(aPackage) == 1;
+    }
 
     /**
      * 添加包裹到转运批次
@@ -271,7 +282,7 @@ public class PackageService extends ServiceImpl<PackageMapper, Package> implemen
             aPackage.setBatchId(packageBatchDTO.getBatchId());
             aPackage.setStatus(Package.statusEnum.IN_TRANSIT.getStatus());
             QueryWrapper<Package> queryWrapper = new QueryWrapper<>();
-            packageMapper.update(aPackage, queryWrapper);
+            packageMapper.updateById(aPackage);
         }
         return true;
     }
