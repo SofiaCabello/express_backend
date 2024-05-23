@@ -232,6 +232,34 @@ public class PackageService extends ServiceImpl<PackageMapper, Package> implemen
     }
 
     /**
+     * 获取未揽收的包裹
+     */
+    public List<Package> getUnpickedPackages(Long origin) {
+        QueryWrapper<Shipment> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("origin", origin);
+        List<Long> shipmentIds = shipmentService.getShipmentIdsByOrigin(origin);
+        QueryWrapper<Package> queryWrapper1 = new QueryWrapper<>();
+        queryWrapper1.in("shipment_id", shipmentIds);
+        queryWrapper1.eq("status", Package.statusEnum.PENDING.getStatus());
+        return packageMapper.selectList(queryWrapper1);
+    }
+
+    /**
+     * 获取未派送的包裹
+     */
+    public List<Package> getUndeliveredPackages(Long destination) {
+        QueryWrapper<Shipment> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("destination", destination);
+        List<Long> shipmentIds = shipmentService.getShipmentIdsByDestination(destination);
+        QueryWrapper<Package> queryWrapper1 = new QueryWrapper<>();
+        queryWrapper1.in("shipment_id", shipmentIds);
+        queryWrapper1.eq("status", Package.statusEnum.IN_TRANSIT.getStatus());
+        return packageMapper.selectList(queryWrapper1);
+    }
+
+
+
+    /**
      * 添加包裹的转运批次ids
      * @param packageBatchDTO
      * @return

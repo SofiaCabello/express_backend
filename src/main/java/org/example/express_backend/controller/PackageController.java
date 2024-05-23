@@ -135,5 +135,33 @@ public class PackageController {
         }
     }
 
+    /**
+     * 获取当前地区未揽收的包裹
+     * @param logisticId 区域id
+     * @return 未揽收的包裹
+     */
+    @GetMapping("/getUnpicked")
+    public Result getUnpickedPackages(@RequestParam(required = true) Long logisticId) {
+        try {
+            return Result.ok(packageService.getUnpickedPackages(logisticId)).message("获取成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.error("获取失败");
+        }
+    }
 
+    /**
+     * 获取当前地区未派送的包裹
+     * @param logisticId 区域id
+     * @return 未派送的包裹
+     */
+    @GetMapping("/getUndelivered")
+    public Result getUndeliveredPackages(@RequestParam(required = true) Long logisticId) {
+        try {
+            return Result.ok(packageService.getUndeliveredPackages(logisticId)).message("获取成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.error("获取失败");
+        }
+    }
 }
