@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.example.express_backend.dto.CalculatePriceDTO;
 import org.example.express_backend.dto.CreatePackageDTO;
 import org.example.express_backend.dto.PackageBatchDTO;
+import org.example.express_backend.entity.Logistic;
 import org.example.express_backend.entity.Package;
 import org.example.express_backend.entity.Shipment;
 import org.example.express_backend.mapper.PackageMapper;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -268,5 +270,13 @@ public class PackageService extends ServiceImpl<PackageMapper, Package> implemen
         }
 
         return packageCounts;
+    }
+
+    public List<Map<String, Integer>> getCountsByDeparture() {
+        return packageMapper.getCountsByDeparture();
+    }
+
+    public List<Map<String, Integer>> getCountsByDestination() {
+        return packageMapper.getCountsByDestination();
     }
 }

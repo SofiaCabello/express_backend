@@ -70,9 +70,6 @@ public class LogisticService extends ServiceImpl<LogisticMapper, Logistic> imple
 
         List<Logistic> logistics = logisticMapper.selectList(queryWrapper);
 
-        // 初始化统计数组
-        int[] counts = new int[logistics.size()];
-
         // 根据省份分类统计网点数量
         Map<String, Integer> provinceCounts = new HashMap<>();
         for (int i = 0; i < logistics.size(); i++) {

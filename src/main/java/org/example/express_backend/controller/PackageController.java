@@ -11,6 +11,9 @@ import org.example.express_backend.util.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/package")
 @Api(tags = "包裹管理接口") // 添加了@Api注解，定义了该Controller的描述信息
@@ -135,5 +138,15 @@ public class PackageController {
         }
     }
 
+    @ApiOperation("根据出发地统计包裹数量")
+    @GetMapping("/getCountsByDeparture")
+    public Result<List<Map<String, Integer>>> getCountsByDeparture(){
+        return Result.ok(packageService.getCountsByDeparture());
+    }
 
+    @ApiOperation("根据出发地统计包裹数量")
+    @GetMapping("/getCountsByDestination")
+    public Result<List<Map<String, Integer>>> getCountsByDestination(){
+        return Result.ok(packageService.getCountsByDestination());
+    }
 }
