@@ -118,4 +118,22 @@ public class ShipmentService {
         wrapper.eq("customer_id", customerId);
         return shipmentMapper.selectList(wrapper).stream().map(Shipment::getId).collect(Collectors.toList());
     }
+
+    /**
+     * 根据出发地id获取运单id
+     */
+    public List<Long> getShipmentIdsByOrigin(Long origin) {
+        QueryWrapper<Shipment> wrapper = new QueryWrapper<>();
+        wrapper.eq("origin", origin);
+        return shipmentMapper.selectList(wrapper).stream().map(Shipment::getId).collect(Collectors.toList());
+    }
+
+    /**
+     * 根据目的地id获取运单id
+     */
+    public List<Long> getShipmentIdsByDestination(Long destination) {
+        QueryWrapper<Shipment> wrapper = new QueryWrapper<>();
+        wrapper.eq("destination", destination);
+        return shipmentMapper.selectList(wrapper).stream().map(Shipment::getId).collect(Collectors.toList());
+    }
 }
