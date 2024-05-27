@@ -30,8 +30,9 @@ public class AdminEmployeeController {
 
     //获取所有员工分页信息
     @GetMapping("/getAllPages")
-    public BackPage<Employee> queryEmployeesPage(@RequestParam("pageNo") Long pageNo, @RequestParam("pageSize") Long pageSize) {
-        return adminEmployeeService.queryEmployeesPage(pageNo, pageSize);
+    public Result queryEmployeesPage(@RequestParam("pageNo") Long pageNo, @RequestParam("pageSize") Long pageSize) {
+        var page = adminEmployeeService.queryEmployeesPage(pageNo, pageSize);
+        return Result.ok(page).message("查询成功").total(page.getTotalNum());
     }
 
     /**

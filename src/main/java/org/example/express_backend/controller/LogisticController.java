@@ -29,4 +29,9 @@ public class LogisticController {
     public Result<Map<String, int[]>> getCountsByLevel(@RequestParam String level) {
         return Result.ok(logisticService.getCountsByLevel(level));
     }
+
+    @GetMapping("/getLogisticName")
+    public Result getLogisticName(@RequestParam Long id){
+        return Result.ok(logisticService.getLogisticName(id)).message("获取成功");
+    }
 }

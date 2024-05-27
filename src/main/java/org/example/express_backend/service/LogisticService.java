@@ -85,4 +85,8 @@ public class LogisticService extends ServiceImpl<LogisticMapper, Logistic> imple
 
         return countsMap;
     }
+
+    public String getLogisticName(Long id){
+        return logisticMapper.selectById(id).getProvince() + logisticMapper.selectById(id).getCity() + logisticMapper.selectById(id).getDistrict();
+    }
 }
