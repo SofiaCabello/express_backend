@@ -254,13 +254,13 @@ public class PackageService extends ServiceImpl<PackageMapper, Package> implemen
      * @param packageBatchDTO
      * @return
      */
-    public boolean addPackageToBatch(PackageBatchDTO packageBatchDTO){
+    public void addPackageToBatch(PackageBatchDTO packageBatchDTO){
         for (Long id :
                 packageBatchDTO.getPackageIds()) {
             Package aPackage = packageMapper.selectById(id);
             aPackage.setBatchId(packageBatchDTO.getBatchId());
+            packageMapper.updateById(aPackage);
         }
-        return true;
     }
 
     public List<Long> getPackageIdsByVehicleId(Long vehicleId) {

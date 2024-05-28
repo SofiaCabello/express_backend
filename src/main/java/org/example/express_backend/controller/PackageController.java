@@ -162,10 +162,12 @@ public class PackageController {
     @ApiOperation("添加包裹的转运批次ids") // 添加了@ApiOperation注解，定义了该方法的描述信息
     @PostMapping("/addPackageToBatch")
     public Result addPackageToBatch(@RequestBody PackageBatchDTO packageBatchDTO){
-        if(packageService.addPackageToBatch(packageBatchDTO)){
-            return Result.ok().message("添加成功");
-        } else {
-            return Result.error("添加失败");
+        try {
+            packageService.addPackageToBatch(packageBatchDTO);
+            return Result.ok().message("添加包裹的转运批次ids成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.error("添加包裹的转运批次ids失败");
         }
     }
 

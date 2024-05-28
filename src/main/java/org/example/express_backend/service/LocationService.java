@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.example.express_backend.dto.LocationDTO;
 import org.example.express_backend.dto.LocationResultDTO;
 import org.example.express_backend.entity.Location;
+import org.example.express_backend.entity.Point;
 import org.example.express_backend.mapper.LocationMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,16 +32,13 @@ public class LocationService {
         // 1. 获取批次id，查询包裹id
         Long batchId = locationDTO.getBatchId();
         List<Long> packageIds = packageService.getPackageIdsByBatchId(batchId);
+        Point point = locationDTO.getCoordinate();
+        String pointStr = point.makePoint();
+        System.out.println("[DEBUG] pointStr: " + pointStr);
         // 2. 插入位置信息
-        List<Location> locations = new ArrayList<>();
-        for(Long id : packageIds){
-            Location location = Location.builder()
-                    .id(id)
-                    .coordinate(locationDTO.getCoordinate())
-                    .build();
-            locations.add(location);
+        for(Long id : packageIds) {
+            locationMapper.insertLocation(id, pointStr);
         }
-        locationMapper.insertBatch(locations);
     }
 
 

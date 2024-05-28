@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class Point {
-    private Double latitude; // 经度
-    private Double longitude; // 纬度
+    private Double longitude; // 经度
+    private Double latitude; // 纬度
 
     public String makePoint() {
         return String.format("POINT(%f %f)", latitude, longitude);
