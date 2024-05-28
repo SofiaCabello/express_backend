@@ -78,6 +78,37 @@ public class PackageController {
         }
     }
 
+
+    /**
+     * 获取未揽收包裹
+     * @param logisticsId 网点id
+     * @return 未揽收包裹
+     */
+    @GetMapping("/getUnpickedPackages")
+    public Result getUnpickedPackages(@RequestParam Long logisticsId){
+        try {
+            return Result.ok(packageService.getUnpickedPackages(logisticsId)).message("获取未揽收包裹成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.error("获取未揽收包裹失败");
+        }
+    }
+
+    /**
+     * 获取未派送包裹
+     * @param logisticsId 网点id
+     * @return 未派送包裹
+     */
+    @GetMapping("/getUndeliveredPackages")
+    public Result getUndeliveredPackages(@RequestParam Long logisticsId){
+        try {
+            return Result.ok(packageService.getUndeliveredPackages(logisticsId)).message("获取未派送包裹成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.error("获取未派送包裹失败");
+        }
+    }
+
 //    /**
 //     * 运输包裹
 //     * @param packageDTO

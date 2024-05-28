@@ -21,6 +21,10 @@ public class BatchService extends ServiceImpl<BatchMapper, Batch> implements ISe
     private BatchMapper batchMapper;
     @Autowired
     private LocationService locationService;
+    @Autowired
+    private LogisticService logisticService;
+    @Autowired
+    private PackageService packageService;
 
     /**
      * 生成批次Id
@@ -65,12 +69,15 @@ public class BatchService extends ServiceImpl<BatchMapper, Batch> implements ISe
     // TODO: 更新批次状态时，要将批次所在车辆的位置信息复制到Location表中，以作备份
     public boolean updateBatchStatus(UpdateBatchStatusDTO DTO) {
         Batch batch = batchMapper.selectById(DTO.getBatchId());
-        if (batch == null) {
-            return false;
-        }
+        String level = logisticService.getLogisticLevel(batch.getDestination());
+
         batch.setStatus(DTO.getStatus());
         try {
             batchMapper.updateById(batch);
+            // 如果批次目的地等级为district，同步更新包裹状态为arrived
+            if(level.equals("district")) {
+                packageService.updatePackageStatusByBatchId(DTO.getBatchId());
+            }
         } catch (MybatisPlusException e) {
             e.printStackTrace();
             return false;

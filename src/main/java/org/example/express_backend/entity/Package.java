@@ -31,7 +31,8 @@ public class Package {
         IN_TRANSIT("in_transit"),
         DELIVERING("delivering"),
         SIGNED("signed"),
-        CANCELLED("cancelled");
+        CANCELLED("cancelled"),
+        ARRIVED("arrived");
 
         private final String status;
 

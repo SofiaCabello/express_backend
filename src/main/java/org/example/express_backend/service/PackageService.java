@@ -222,6 +222,22 @@ public class PackageService extends ServiceImpl<PackageMapper, Package> implemen
     }*/
 
     /**
+     * 更新特定batch_id的包裹状态为arrived
+     * @param batchId 批次id
+     * @return 是否更新成功
+     */
+    public boolean updatePackageStatusByBatchId(Long batchId) {
+        QueryWrapper<Package> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("batch_id", batchId);
+        List<Package> packages = packageMapper.selectList(queryWrapper);
+        for (Package aPackage : packages) {
+            aPackage.setStatus(Package.statusEnum.ARRIVED.getStatus());
+            packageMapper.updateById(aPackage);
+        }
+        return true;
+    }
+
+    /**
      * 更新包裹状态私有方法
      * @param packageId 包裹id
      * @param status 包裹状态
@@ -252,6 +268,32 @@ public class PackageService extends ServiceImpl<PackageMapper, Package> implemen
         queryWrapper.eq("vehicle_id", vehicleId);
         List<Package> packages = packageMapper.selectList(queryWrapper);
         return packages.stream().map(Package::getId).collect(Collectors.toList());
+    }
+
+    /**
+     * 获取未揽收的包裹
+     * @param logisticId 网点id
+     * @return 未揽收的包裹
+     */
+    public List<Package> getUnpickedPackages(Long logisticId) {
+        List<Long> shipmentIds = shipmentService.getShipmentIdsByOrigin(logisticId);
+        QueryWrapper<Package> queryWrapper = new QueryWrapper<>();
+        queryWrapper.in("shipment_id", shipmentIds);
+        queryWrapper.eq("status", Package.statusEnum.PENDING.getStatus());
+        return packageMapper.selectList(queryWrapper);
+    }
+
+    /**
+     * 获取未派送的包裹
+     * @param logisticId 网点id
+     * @return 未派送的包裹
+     */
+    public List<Package> getUndeliveredPackages(Long logisticId) {
+        List<Long> shipmentIds = shipmentService.getShipmentIdsByDestination(logisticId);
+        QueryWrapper<Package> queryWrapper = new QueryWrapper<>();
+        queryWrapper.in("shipment_id", shipmentIds);
+        queryWrapper.eq("status", Package.statusEnum.ARRIVED.getStatus());
+        return packageMapper.selectList(queryWrapper);
     }
 
     public int[] getDataBySeven() {
