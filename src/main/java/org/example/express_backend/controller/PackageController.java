@@ -149,4 +149,9 @@ public class PackageController {
     public Result<List<Map<String, Integer>>> getCountsByDestination(){
         return Result.ok(packageService.getCountsByDestination());
     }
+
+    @GetMapping("/getTotalPackageCount")
+    public Result getTotalPackageCount(){
+        return Result.ok(packageService.getTotalPackageCount());
+    }
 }

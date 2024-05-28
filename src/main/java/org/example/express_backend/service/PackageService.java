@@ -279,4 +279,8 @@ public class PackageService extends ServiceImpl<PackageMapper, Package> implemen
     public List<Map<String, Integer>> getCountsByDestination() {
         return packageMapper.getCountsByDestination();
     }
+
+    public int getTotalPackageCount() {
+        return packageMapper.selectCount(null);
+    }
 }

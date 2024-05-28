@@ -26,7 +26,8 @@ public interface PackageMapper extends BaseMapper<Package> {
             "FROM `package` p " + // 注意这里使用了反引号来避免关键字冲突
             "JOIN shipment s ON p.shipment_id = s.id " +
             "JOIN logistic l ON s.origin = l.id " +
-            "GROUP BY l.name")
+            "GROUP BY l.name " +
+            "ORDER BY count DESC")
     List<Map<String, Integer>> getCountsByDeparture();
 
 
@@ -38,7 +39,8 @@ public interface PackageMapper extends BaseMapper<Package> {
             "FROM `package` p " + // 注意这里使用了反引号来避免关键字冲突
             "JOIN shipment s ON p.shipment_id = s.id " +
             "JOIN logistic l ON s.destination = l.id " +
-            "GROUP BY l.name")
+            "GROUP BY l.name " +
+            "ORDER BY count DESC")
     List<Map<String, Integer>> getCountsByDestination();
 
 
