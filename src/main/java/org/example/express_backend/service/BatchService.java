@@ -1,5 +1,6 @@
 package org.example.express_backend.service;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.exceptions.MybatisPlusException;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 public class BatchService extends ServiceImpl<BatchMapper, Batch> implements IService<Batch> {
@@ -84,6 +86,17 @@ public class BatchService extends ServiceImpl<BatchMapper, Batch> implements ISe
         }
         return true;
     }
+
+    /**
+     * 设定packages字段, 是JSONArray
+     */
+    public void setPackages(Long batchId, List<Long> packages){
+        Batch batch = batchMapper.selectById(batchId);
+        // 转换为JSONArray
+        batch.setPackages(JSON.parseArray(JSON.toJSONString(packages)));
+        batchMapper.updateById(batch);
+    }
+
 
     /**
      * 批次统计7天的创建数据

@@ -4,8 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.bouncycastle.util.Times;
-import org.example.express_backend.entity.Point;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -14,7 +12,7 @@ import java.sql.Timestamp;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class LocationResultDTO implements Serializable {
-    private Timestamp time;
-    private String location;
+public class LocationQueryDTO implements Serializable {
+    private Timestamp timestamp;
+    private double[] coordinates;
 }

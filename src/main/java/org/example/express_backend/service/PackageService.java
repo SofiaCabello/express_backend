@@ -12,6 +12,7 @@ import org.example.express_backend.entity.Package;
 import org.example.express_backend.entity.Shipment;
 import org.example.express_backend.mapper.PackageMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +31,9 @@ public class PackageService extends ServiceImpl<PackageMapper, Package> implemen
     private ShipmentService shipmentService;
     @Autowired
     private CustomerService customerService;
+    @Lazy
+    @Autowired
+    private BatchService batchService;
 
     /**
      * 根据包裹id获取包裹
@@ -261,6 +265,7 @@ public class PackageService extends ServiceImpl<PackageMapper, Package> implemen
             aPackage.setBatchId(packageBatchDTO.getBatchId());
             packageMapper.updateById(aPackage);
         }
+        batchService.setPackages(packageBatchDTO.getBatchId(), packageBatchDTO.getPackageIds());
     }
 
     public List<Long> getPackageIdsByVehicleId(Long vehicleId) {

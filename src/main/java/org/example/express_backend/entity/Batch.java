@@ -1,5 +1,8 @@
 package org.example.express_backend.entity;
 
+import com.alibaba.fastjson.JSONArray;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.extension.handlers.FastjsonTypeHandler;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
@@ -18,6 +21,8 @@ public class Batch {
     private Long responsible;
     private String status;
     private Long vehicleId;
+    @TableField(typeHandler = FastjsonTypeHandler.class)
+    private JSONArray packages;
 
     @Getter
     public enum statusEnum {

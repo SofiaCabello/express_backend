@@ -2,6 +2,7 @@ package org.example.express_backend.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.example.express_backend.dto.LocationDTO;
+import org.example.express_backend.dto.LocationQueryDTO;
 import org.example.express_backend.dto.LocationResultDTO;
 import org.example.express_backend.entity.Location;
 import org.example.express_backend.entity.Point;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -47,14 +49,22 @@ public class LocationService {
      * @param id 包裹id
      * @return 位置信息
      */
-    public List<LocationResultDTO> getPackageLocation(Long id) {
-        QueryWrapper<Location> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("id", id);
-        List<Location> locations = locationMapper.selectList(queryWrapper);
-        return locations.stream().map(location -> LocationResultDTO.builder()
-                .coordinate(location.getCoordinate())
-                .time(location.getTime())
-                .build()).collect(Collectors.toList());
+    public List<LocationQueryDTO> getPackageLocation(Long id) {
+        List<LocationResultDTO> locations = locationMapper.getLocation(id);
+        List<LocationQueryDTO> result = new ArrayList<>();
+        for(LocationResultDTO location : locations){
+            result.add(LocationQueryDTO.builder()
+                    .timestamp(location.getTime())
+                    .coordinates(getCoordinates(location.getLocation()))
+                    .build());
+        }
+        return result;
+    }
+
+    private double[] getCoordinates(String pointStr){
+        String coordinates = pointStr.replace("POINT(", "").replace(")", "");
+        String[] coordinate = coordinates.split(" ");
+        return new double[]{Double.parseDouble(coordinate[0]), Double.parseDouble(coordinate[1])};
     }
 
 //    /**
