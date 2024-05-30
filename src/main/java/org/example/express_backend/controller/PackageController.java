@@ -171,6 +171,20 @@ public class PackageController {
         }
     }
 
+    /**
+     * 获取包裹历史
+     * @return
+     */
+    @GetMapping("/getPackageHistory")
+    public Result getPackageHistory(@RequestParam Long id){
+        try {
+            return Result.ok(packageService.getPackageHistory(id)).message("获取成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.error("获取失败");
+        }
+    }
+
     @ApiOperation("根据出发地统计包裹数量")
     @GetMapping("/getCountsByDeparture")
     public Result<List<Map<String, Integer>>> getCountsByDeparture(){

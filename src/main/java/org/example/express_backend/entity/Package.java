@@ -15,7 +15,7 @@ public class Package {
     private String receiverName;
     private String receiverPhone;
     private String receiverAddress;
-    private Timestamp signDate;
+    private Timestamp signDate;   // 状态更新时间
     private Timestamp createDate;
     private String status;
     private Long shipmentId;

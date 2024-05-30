@@ -4,10 +4,12 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.exceptions.MybatisPlusException;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.bouncycastle.util.Times;
 import org.example.express_backend.dto.CalculatePriceDTO;
 import org.example.express_backend.dto.CreatePackageDTO;
+import org.example.express_backend.dto.HistoryDTO;
 import org.example.express_backend.dto.PackageBatchDTO;
-import org.example.express_backend.entity.Logistic;
+import org.example.express_backend.entity.Batch;
 import org.example.express_backend.entity.Package;
 import org.example.express_backend.entity.Shipment;
 import org.example.express_backend.mapper.PackageMapper;
@@ -18,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -34,6 +36,8 @@ public class PackageService extends ServiceImpl<PackageMapper, Package> implemen
     @Lazy
     @Autowired
     private BatchService batchService;
+    @Autowired
+    private LogisticService logisticService;
 
     /**
      * 根据包裹id获取包裹
@@ -156,6 +160,7 @@ public class PackageService extends ServiceImpl<PackageMapper, Package> implemen
                 .weight(DTO.getWeight())
                 .size(DTO.getSize())
                 .status(Package.statusEnum.PENDING.getStatus())
+                .signDate(new Timestamp(System.currentTimeMillis()))
                 .build();
         if(DTO.getReceiverId() !=null){
             P.setReceiverId(DTO.getReceiverId());
@@ -227,18 +232,18 @@ public class PackageService extends ServiceImpl<PackageMapper, Package> implemen
 
     /**
      * 更新特定batch_id的包裹状态为arrived
+     *
      * @param batchId 批次id
-     * @return 是否更新成功
      */
-    public boolean updatePackageStatusByBatchId(Long batchId) {
+    public void updatePackageStatusByBatchId(Long batchId) {
         QueryWrapper<Package> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("batch_id", batchId);
         List<Package> packages = packageMapper.selectList(queryWrapper);
         for (Package aPackage : packages) {
             aPackage.setStatus(Package.statusEnum.ARRIVED.getStatus());
+            aPackage.setSignDate(new Timestamp(System.currentTimeMillis()));
             packageMapper.updateById(aPackage);
         }
-        return true;
     }
 
     /**
@@ -250,6 +255,7 @@ public class PackageService extends ServiceImpl<PackageMapper, Package> implemen
     private boolean updatePackageStatus(Long packageId, String status) {
         Package aPackage = packageMapper.selectById(packageId);
         aPackage.setStatus(status);
+        aPackage.setSignDate(new Timestamp(System.currentTimeMillis()));
         return packageMapper.updateById(aPackage) == 1;
     }
 
@@ -283,8 +289,12 @@ public class PackageService extends ServiceImpl<PackageMapper, Package> implemen
     public List<Package> getUnpickedPackages(Long logisticId) {
         List<Long> shipmentIds = shipmentService.getShipmentIdsByOrigin(logisticId);
         QueryWrapper<Package> queryWrapper = new QueryWrapper<>();
-        queryWrapper.in("shipment_id", shipmentIds);
-        queryWrapper.eq("status", Package.statusEnum.PENDING.getStatus());
+        if(!shipmentIds.isEmpty()) {
+            queryWrapper.in("shipment_id", shipmentIds);
+            queryWrapper.eq("status", Package.statusEnum.PENDING.getStatus());
+        } else {
+            return null;
+        }
         return packageMapper.selectList(queryWrapper);
     }
 
@@ -299,6 +309,40 @@ public class PackageService extends ServiceImpl<PackageMapper, Package> implemen
         queryWrapper.in("shipment_id", shipmentIds);
         queryWrapper.eq("status", Package.statusEnum.ARRIVED.getStatus());
         return packageMapper.selectList(queryWrapper);
+    }
+
+    /**
+     * 获取包裹历史
+     * @param packageId 包裹id
+     * @return 包裹历史
+     */
+    public List<Map<Timestamp, String>> getPackageHistory(Long packageId) {
+        // 1. 先检查包裹状态
+        String status = packageMapper.selectById(packageId).getStatus();
+        Timestamp signDate = packageMapper.selectById(packageId).getSignDate();
+        // 2. 选取包含该包裹的批次
+        List<HistoryDTO> history = batchService.getBatchByPackageId(packageId);
+        List<Map<Timestamp, String>> result = new ArrayList<>();
+        // 3. 编写历史记录
+        if(status.equals(Package.statusEnum.PENDING.getStatus())){
+            Timestamp createDate = packageMapper.selectById(packageId).getCreateDate();
+            result.add(Map.of(createDate, "包裹正在等待揽收。"));
+        } else if (status.equals(Package.statusEnum.IN_TRANSIT.getStatus())) {
+            for(HistoryDTO h : history){
+                String originName = logisticService.getLogisticName(h.getOrigin());
+                String destinationName = logisticService.getLogisticName(h.getDestination());
+                if(h.getStatus().equals(Batch.statusEnum.IN_TRANS.getStatus())){
+                    result.add(Map.of(h.getCreateDate(), "包裹已由" + originName + "抵达" + destinationName + "。"));
+                } else {
+                    result.add((Map.of(h.getCreateDate(), "包裹正从" + originName + "发往" + destinationName + "。")));
+                }
+            }
+        } else if (status.equals(Package.statusEnum.ARRIVED.getStatus())) {
+            result.add(Map.of(signDate, "包裹已抵达目的地，正在等待派送。"));
+        } else if (status.equals(Package.statusEnum.SIGNED.getStatus())) {
+            result.add(Map.of(signDate, "包裹已签收。"));
+        }
+        return result;
     }
 
     public int[] getDataBySeven() {

@@ -1,11 +1,12 @@
 package org.example.express_backend.service;
 
-import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.exceptions.MybatisPlusException;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.example.express_backend.dto.CreateBatchDTO;
+import org.example.express_backend.dto.HistoryDTO;
 import org.example.express_backend.dto.UpdateBatchStatusDTO;
 import org.example.express_backend.entity.Batch;
 import org.example.express_backend.entity.Package;
@@ -70,14 +71,20 @@ public class BatchService extends ServiceImpl<BatchMapper, Batch> implements ISe
      */
     // TODO: 更新批次状态时，要将批次所在车辆的位置信息复制到Location表中，以作备份
     public boolean updateBatchStatus(UpdateBatchStatusDTO DTO) {
-        Batch batch = batchMapper.selectById(DTO.getBatchId());
+        System.out.println("[DEBUG] 0");
+        QueryWrapper<Batch> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id", DTO.getBatchId());
+        Batch batch = batchMapper.selectOne(queryWrapper);
         String level = logisticService.getLogisticLevel(batch.getDestination());
 
-        batch.setStatus(DTO.getStatus());
+        batch.setStatus(Batch.statusEnum.ARRIVE.getStatus());
+        System.out.println("[DEBUG] 1");
         try {
             batchMapper.updateById(batch);
+            System.out.println("[DEBUG] 2");
             // 如果批次目的地等级为district，同步更新包裹状态为arrived
             if(level.equals("district")) {
+                System.out.println("[DEBUG] 3");
                 packageService.updatePackageStatusByBatchId(DTO.getBatchId());
             }
         } catch (MybatisPlusException e) {
@@ -92,9 +99,15 @@ public class BatchService extends ServiceImpl<BatchMapper, Batch> implements ISe
      */
     public void setPackages(Long batchId, List<Long> packages){
         Batch batch = batchMapper.selectById(batchId);
-        // 转换为JSONArray
-        batch.setPackages(JSON.parseArray(JSON.toJSONString(packages)));
+        batch.setPackages(JSONArray.parseArray(packages.toString()));
         batchMapper.updateById(batch);
+    }
+
+    /**
+     * 获取批次的历史记录
+     */
+    public List<HistoryDTO> getBatchByPackageId(Long packageId){
+        return batchMapper.getBatchByPackageId(packageId);
     }
 
 
