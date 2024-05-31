@@ -16,6 +16,6 @@ import java.util.List;
  */
 @Mapper
 public interface BatchMapper extends BaseMapper<Batch> {
-    @Select("SELECT create_date, origin, destination, status FROM batch WHERE JSON_CONTAINS(packages, JSON_OBJECT('id', #{packageId})) order by create_date desc")
+    @Select("SELECT create_date, origin, destination, status FROM batch WHERE JSON_CONTAINS(packages, '${packageId}') order by create_date desc")
     List<HistoryDTO> getBatchByPackageId(Long packageId);
 }

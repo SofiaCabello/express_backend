@@ -324,24 +324,42 @@ public class PackageService extends ServiceImpl<PackageMapper, Package> implemen
         List<HistoryDTO> history = batchService.getBatchByPackageId(packageId);
         List<Map<Timestamp, String>> result = new ArrayList<>();
         // 3. 编写历史记录
-        if(status.equals(Package.statusEnum.PENDING.getStatus())){
-            Timestamp createDate = packageMapper.selectById(packageId).getCreateDate();
-            result.add(Map.of(createDate, "包裹正在等待揽收。"));
-        } else if (status.equals(Package.statusEnum.IN_TRANSIT.getStatus())) {
-            for(HistoryDTO h : history){
-                String originName = logisticService.getLogisticName(h.getOrigin());
-                String destinationName = logisticService.getLogisticName(h.getDestination());
-                if(h.getStatus().equals(Batch.statusEnum.IN_TRANS.getStatus())){
-                    result.add(Map.of(h.getCreateDate(), "包裹已由" + originName + "抵达" + destinationName + "。"));
-                } else {
-                    result.add((Map.of(h.getCreateDate(), "包裹正从" + originName + "发往" + destinationName + "。")));
-                }
+        // 无论状态如何，首先添加包裹的创建记录
+        Timestamp createDate = packageMapper.selectById(packageId).getCreateDate();
+        Timestamp updateDate = packageMapper.selectById(packageId).getSignDate();
+        result.add(Map.of(createDate, "包裹已创建，正在处理。"));
+
+        // 处理在途及其它状态的历史记录
+        for(HistoryDTO h : history){
+            String originName = logisticService.getLogisticName(h.getOrigin());
+            String destinationName = logisticService.getLogisticName(h.getDestination());
+            if(h.getStatus().equals(Batch.statusEnum.IN_TRANS.getStatus())){
+                result.add(Map.of(updateDate, "包裹正从" + originName + "发往" + destinationName + "。"));
+            } else {
+                result.add((Map.of(updateDate, "包裹已由" + originName + "抵达" + destinationName + "。")));
             }
-        } else if (status.equals(Package.statusEnum.ARRIVED.getStatus())) {
-            result.add(Map.of(signDate, "包裹已抵达目的地，正在等待派送。"));
-        } else if (status.equals(Package.statusEnum.SIGNED.getStatus())) {
-            result.add(Map.of(signDate, "包裹已签收。"));
         }
+
+        // 根据最新状态添加最终记录
+        switch (status) {
+            case "pending":
+                // 无需添加额外记录
+                break;
+            case "in_transit":
+                // 在途状态的记录已在上面的循环中处理
+                break;
+            case "arrived":
+                result.add(Map.of(updateDate, "包裹已抵达目的地，正在等待派送。"));
+                break;
+            case "signed":
+                result.add(Map.of(updateDate, "包裹已被签收，签收时间为" + signDate + "。"));
+                break;
+            default:
+                // 可以添加一条默认的记录，如果状态不明确
+                result.add(Map.of(updateDate, "包裹状态更新中。"));
+                break;
+        }
+
         return result;
     }
 
