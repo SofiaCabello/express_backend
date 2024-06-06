@@ -132,4 +132,21 @@ public class BatchService extends ServiceImpl<BatchMapper, Batch> implements ISe
 
         return Counts;
     }
+
+    public Integer getCountsByEmployeeId(Long employeeId) {
+        // 构造查询条件
+        QueryWrapper<Batch> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("employee_id", employeeId);
+
+        // 查询与employeeId相关的所有batchId
+        List<Batch> batchList = batchMapper.selectList(queryWrapper);
+
+        // 逐个遍历batchList，获取每个batchId对应的包裹数量，并累加
+        int totalPackageCount = 0;
+        for (Batch batch : batchList) {
+            totalPackageCount += packageService.getPackageCountByBatchId(batch.getId());
+        }
+
+        return totalPackageCount;
+    }
 }
