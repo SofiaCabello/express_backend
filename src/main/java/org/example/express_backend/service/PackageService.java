@@ -5,10 +5,7 @@ import com.baomidou.mybatisplus.core.exceptions.MybatisPlusException;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.bouncycastle.util.Times;
-import org.example.express_backend.dto.CalculatePriceDTO;
-import org.example.express_backend.dto.CreatePackageDTO;
-import org.example.express_backend.dto.HistoryDTO;
-import org.example.express_backend.dto.PackageBatchDTO;
+import org.example.express_backend.dto.*;
 import org.example.express_backend.entity.Batch;
 import org.example.express_backend.entity.Package;
 import org.example.express_backend.entity.Shipment;
@@ -174,6 +171,22 @@ public class PackageService extends ServiceImpl<PackageMapper, Package> implemen
     }
 
     /**
+     * 更新包裹重量和尺寸信息
+     */
+    @Transactional
+    public boolean updatePackageInfo(UpdatePackageDTO updatePackageDTO){
+        Package P = packageMapper.selectById(updatePackageDTO.getPackageId());
+        Double oldPrice = calculatePrice(new CalculatePriceDTO(shipmentService.getShipmentById(P.getShipmentId()).getOrigin(), shipmentService.getShipmentById(P.getShipmentId()).getDestination(), P.getWeight(), P.getSize(), shipmentService.getShipmentById(P.getShipmentId()).getType()));
+        P.setSize(updatePackageDTO.getSize());
+        P.setWeight(updatePackageDTO.getWeight());
+        // 更新价格
+        Shipment S = shipmentService.getShipmentById(P.getShipmentId());
+        Double price = S.getPrice() - oldPrice + calculatePrice(new CalculatePriceDTO(S.getOrigin(), S.getDestination(), P.getWeight(), P.getSize(), S.getType()));
+        shipmentService.updatePrice(S.getId(), price);
+        return packageMapper.updateById(P) == 1;
+    }
+
+    /**
      * 生成包裹id
      * @param shipmentId 运单id
      * @return 包裹id
@@ -306,8 +319,12 @@ public class PackageService extends ServiceImpl<PackageMapper, Package> implemen
     public List<Package> getUndeliveredPackages(Long logisticId) {
         List<Long> shipmentIds = shipmentService.getShipmentIdsByDestination(logisticId);
         QueryWrapper<Package> queryWrapper = new QueryWrapper<>();
-        queryWrapper.in("shipment_id", shipmentIds);
-        queryWrapper.eq("status", Package.statusEnum.ARRIVED.getStatus());
+        if(!shipmentIds.isEmpty()) {
+            queryWrapper.in("shipment_id", shipmentIds);
+            queryWrapper.eq("status", Package.statusEnum.ARRIVED.getStatus());
+        } else {
+            return null;
+        }
         return packageMapper.selectList(queryWrapper);
     }
 

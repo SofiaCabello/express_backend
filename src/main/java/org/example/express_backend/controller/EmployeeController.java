@@ -7,6 +7,7 @@ import org.example.express_backend.dto.EmployeeDTO;
 import org.example.express_backend.dto.EmployeeLoginDTO;
 import org.example.express_backend.entity.Employee;
 import org.example.express_backend.service.EmployeeService;
+import org.example.express_backend.service.LogisticService;
 import org.example.express_backend.util.JwtUtil;
 import org.example.express_backend.util.Result;
 import org.example.express_backend.vo.EmployeeLoginVO;
@@ -24,6 +25,8 @@ public class EmployeeController {
 
     @Autowired
     private EmployeeService employeeService;
+    @Autowired
+    private LogisticService logisticService;
 
     /**
      * 登录
@@ -38,11 +41,15 @@ public class EmployeeController {
 
         Employee employee = employeeService.login(employeeLoginDTO);
 
+        String level = logisticService.getLogisticLevel(employee.getServeAt());
+
         //登录成功后，生成jwt令牌
         String token = JwtUtil.generateToken(employee.getEmail());
         log.info("token为：" + token);
 
         EmployeeLoginVO employeeLoginVO = EmployeeLoginVO.builder()
+                .logisticId(employee.getServeAt())
+                .serveAt(level)
                 .id(employee.getId())
                 .eamil(employee.getEmail())
                 .name(employee.getName())

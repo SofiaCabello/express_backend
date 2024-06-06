@@ -2,9 +2,11 @@ package org.example.express_backend.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.ibatis.annotations.Update;
 import org.example.express_backend.dto.CalculatePriceDTO;
 import org.example.express_backend.dto.CreatePackageDTO;
 import org.example.express_backend.dto.PackageBatchDTO;
+import org.example.express_backend.dto.UpdatePackageDTO;
 import org.example.express_backend.service.LocationService;
 import org.example.express_backend.service.PackageService;
 import org.example.express_backend.util.Result;
@@ -78,6 +80,19 @@ public class PackageController {
         }
     }
 
+    /**
+     * 更新包裹信息
+     */
+    @PostMapping("/updatePackage")
+    public Result updatePackage(@RequestBody UpdatePackageDTO updatePackageDTO){
+        try {
+            packageService.updatePackageInfo(updatePackageDTO);
+            return Result.ok().message("更新包裹信息成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.error("更新包裹信息失败");
+        }
+    }
 
     /**
      * 获取未揽收包裹
