@@ -20,6 +20,6 @@ public interface LocationMapper extends BaseMapper<Location> {
     @Select("SELECT time, ST_AsText(ST_GeomFromWKB(UNHEX(HEX(ST_ASBINARY(coordinate))))) AS location FROM location WHERE id = #{id} order by time desc")
     List<LocationResultDTO> getLocation(@Param("id") Long id);
 
-    @Insert("INSERT INTO location (id, coordinate, time) VALUES (#{id}, #{coordinate}, #{time})")
+    @Insert("INSERT INTO location (id, coordinate, time) VALUES (#{id}, ST_PointFromText(#{coordinate} , 4326), #{time})")
     void insertLocationWithTime(@Param("id") Long id, @Param("coordinate") String coordinate, @Param("time") Timestamp time);
 }

@@ -42,9 +42,11 @@ public class BatchController {
     @PostMapping("/updateBatchStatus")
     @ApiOperation("更新批次状态")
     public Result updateBatchStatus(@RequestBody UpdateBatchStatusDTO updateBatchStatusDTO) {
-        if (batchService.updateBatchStatus(updateBatchStatusDTO)) {
+        try{
+            batchService.updateBatchStatus(updateBatchStatusDTO);
             return Result.ok().message("更新批次状态成功");
-        } else {
+        }catch (Exception e){
+            e.printStackTrace();
             return Result.error("更新批次状态失败");
         }
     }
