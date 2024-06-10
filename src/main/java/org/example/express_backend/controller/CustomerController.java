@@ -25,7 +25,11 @@ public class CustomerController {
     @PostMapping("/login")
     public Result login(@RequestBody CustomerLoginDTO customerLoginDTO){
         try{
-            return Result.ok(customerService.login(customerLoginDTO)).message("登录成功");
+            VerifyDTO result = customerService.login(customerLoginDTO);
+            if(result == null){
+                return Result.error("登录失败");
+            }
+            return Result.ok(result).message("登录成功");
         }
         catch (Exception e){
             return Result.error("登录失败");
