@@ -56,4 +56,16 @@ public class BatchController {
     public Result<int []> getDataBySeven() {
         return Result.ok(batchService.getDataBySeven());
     }
+
+    /**
+     * 根据员工id统计包裹数量
+     * @param employeeId 员工id
+     * @return 包裹数量
+     */
+    @ApiOperation("根据员工id统计包裹数量")
+    @GetMapping("/getCountsByEmployeeId")
+    public Result<Integer> getCountsByEmployeeId(@RequestParam Long employeeId) {
+        return Result.ok(batchService.getCountsByEmployeeId(employeeId));
+    }
+
 }

@@ -409,4 +409,11 @@ public class PackageService extends ServiceImpl<PackageMapper, Package> implemen
     public int getTotalPackageCount() {
         return packageMapper.selectCount(null);
     }
+
+    //根据batchId获取对应的包裹数量
+    public int getPackageCountByBatchId(Long batchId) {
+        QueryWrapper<Package> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("batch_id", batchId);
+        return packageMapper.selectCount(queryWrapper);
+    }
 }
