@@ -8,10 +8,7 @@ import org.example.express_backend.mapper.LogisticMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class LogisticService extends ServiceImpl<LogisticMapper, Logistic> implements IService<Logistic> {
@@ -60,6 +57,16 @@ public class LogisticService extends ServiceImpl<LogisticMapper, Logistic> imple
         transferRoute.add(destinationId);
         System.out.println("transferRoute: " + transferRoute);
         return transferRoute;
+    }
+
+    public String getNextDestination(Long originId, Long destinationId, Long currentId){
+        List<Long> transferRoute = getTransferRoute(originId, destinationId);
+        for(int i = 0; i < transferRoute.size(); i++){
+            if(Objects.equals(transferRoute.get(i), currentId)){
+                return getLogisticName(transferRoute.get(i + 1));
+            }
+        }
+        return null;
     }
 
     public Map<String, int[]> getCountsByLevel(String level) {

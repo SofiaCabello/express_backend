@@ -9,6 +9,8 @@ import org.example.express_backend.util.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/batch")
 @Api(tags = "批次接口服务")
@@ -67,5 +69,12 @@ public class BatchController {
     public Result<Integer> getCountsByEmployeeId(@RequestParam Long employeeId) {
         return Result.ok(batchService.getCountsByEmployeeId(employeeId));
     }
+
+    @ApiOperation("获取批次信息")
+    @GetMapping("/getPackages")
+    public Result<List<Long>> getPackages(@RequestParam Long batchId) {
+        return Result.ok(batchService.getPackages(batchId));
+    }
+
 
 }

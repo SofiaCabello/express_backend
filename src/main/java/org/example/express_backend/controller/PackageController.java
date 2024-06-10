@@ -216,4 +216,9 @@ public class PackageController {
     public Result getTotalPackageCount(){
         return Result.ok(packageService.getTotalPackageCount());
     }
+
+    @GetMapping("/getNextDestination")
+    public Result getNextDestination(@RequestParam Long packageId, @RequestParam Long currentId){
+        return Result.ok(packageService.getNextDestination(packageId, currentId));
+    }
 }

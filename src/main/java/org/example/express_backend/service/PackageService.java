@@ -398,6 +398,19 @@ public class PackageService extends ServiceImpl<PackageMapper, Package> implemen
         return packageCounts;
     }
 
+    /**
+     * 获取包裹的下一个目的地
+     * @param packageId 包裹id
+     * @param currentLogisticId 当前网点id
+     * @return 下一个目的地
+     */
+    public String getNextDestination(Long packageId, Long currentLogisticId) {
+        Package aPackage = packageMapper.selectById(packageId);
+        Long shipmentId = aPackage.getShipmentId();
+        Shipment shipment = shipmentService.getShipmentById(shipmentId);
+        return logisticService.getNextDestination(shipment.getOrigin(), shipment.getDestination(), currentLogisticId);
+    }
+
     public List<Map<String, Integer>> getCountsByDeparture() {
         return packageMapper.getCountsByDeparture();
     }

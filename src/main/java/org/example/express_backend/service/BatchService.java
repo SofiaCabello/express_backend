@@ -8,11 +8,14 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.example.express_backend.dto.CreateBatchDTO;
 import org.example.express_backend.dto.HistoryDTO;
 import org.example.express_backend.dto.UpdateBatchStatusDTO;
+import org.example.express_backend.dto.VehicleLocationResultDTO;
 import org.example.express_backend.entity.Batch;
 import org.example.express_backend.entity.Package;
+import org.example.express_backend.entity.VehicleLocation;
 import org.example.express_backend.mapper.BatchMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
@@ -28,6 +31,8 @@ public class BatchService extends ServiceImpl<BatchMapper, Batch> implements ISe
     private LogisticService logisticService;
     @Autowired
     private PackageService packageService;
+    @Autowired
+    private VehicleService vehicleService;
 
     /**
      * 生成批次Id
@@ -69,13 +74,16 @@ public class BatchService extends ServiceImpl<BatchMapper, Batch> implements ISe
      * @param DTO 更新批次状态的信息
      * @return 是否更新成功
      */
-    // TODO: 更新批次状态时，要将批次所在车辆的位置信息复制到Location表中，以作备份
+    @Transactional
     public boolean updateBatchStatus(UpdateBatchStatusDTO DTO) {
         System.out.println("[DEBUG] 0");
         QueryWrapper<Batch> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("id", DTO.getBatchId());
         Batch batch = batchMapper.selectOne(queryWrapper);
         String level = logisticService.getLogisticLevel(batch.getDestination());
+        Timestamp createDate = batch.getCreateDate();
+        List<VehicleLocationResultDTO> vehicleLocations = vehicleService.getVehicleLocationFromDateById(batch.getVehicleId(), createDate);
+        locationService.insertPackageLocation(vehicleLocations, DTO.getBatchId());
 
         batch.setStatus(Batch.statusEnum.ARRIVE.getStatus());
         System.out.println("[DEBUG] 1");
@@ -92,6 +100,11 @@ public class BatchService extends ServiceImpl<BatchMapper, Batch> implements ISe
             return false;
         }
         return true;
+    }
+
+    public List<Long> getPackages(Long batchId){
+        Batch batch = batchMapper.selectById(batchId);
+        return batch.getPackages().toJavaList(Long.class);
     }
 
     /**

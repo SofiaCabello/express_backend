@@ -4,8 +4,10 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.example.express_backend.dto.LocationDTO;
 import org.example.express_backend.dto.LocationQueryDTO;
 import org.example.express_backend.dto.LocationResultDTO;
+import org.example.express_backend.dto.VehicleLocationResultDTO;
 import org.example.express_backend.entity.Location;
 import org.example.express_backend.entity.Point;
+import org.example.express_backend.entity.VehicleLocation;
 import org.example.express_backend.mapper.LocationMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,6 +45,19 @@ public class LocationService {
         }
     }
 
+    /**
+     * 插入从车辆获取的包裹位置
+     * @param locations 位置信息
+     */
+    public void insertPackageLocation(List<VehicleLocationResultDTO> locations, Long batchId){
+        List<Long> packageIds = packageService.getPackageIdsByBatchId(batchId);
+        for(VehicleLocationResultDTO location : locations){
+            String point = location.getCoordinate();
+            for(Long id : packageIds){
+                locationMapper.insertLocationWithTime(id, point, location.getCreatedAt());
+            }
+        }
+    }
 
     /**
      * 根据id获取包裹位置
